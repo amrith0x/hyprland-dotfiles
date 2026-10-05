@@ -1,33 +1,36 @@
+
+# Applications / theming
+# Audio / PipeWire
+brightnessctl
+cliphist
+code
 # Core
-git
-stow
-
-# Hyprland
-hyprland
-hyprlock
-hypridle
-waybar
-kitty
-
-# Shell / editor
-fish
-neovim
-
 # Desktop utilities
 dolphin
 dunst
-hyprpicker
-cliphist
-wl-clipboard
+fish
+flatpak
+# Fonts
+git
 grim
-slurp
-brightnessctl
-playerctl
-qt6ct
-
-# Audio / PipeWire
-pipewire
-wireplumber
-
+hypridle
+hyprland
+# Hyprland
+hyprlock
+hyprpicker
 # KDE / authentication
+kitty
+kvantum
+neovim
+noto-fonts
+pipewire
+playerctl
 polkit-kde-agent
+qt6ct
+# Shell / editor
+slurp
+stow
+ttf-jetbrains-mono-nerd
+waybar
+wireplumber
+wl-clipboard

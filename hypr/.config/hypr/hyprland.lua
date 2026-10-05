@@ -42,7 +42,7 @@ local browser     = "flatpak run org.mozilla.firefox"
 local IDE         = "code"
 local colorPicker = "hyprpicker | wl-copy"
 local lockScreen  = "hyprlock"
-local logout      = "wlogout"
+local logout      = "wlogout -b 5 -T 260 -B 260 -L 80 -R 80"
 
 -------------------
 ---- AUTOSTART ----
@@ -62,7 +62,7 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("wl-paste --type text --watch cliphist store")
    hl.exec_cmd("wl-paste --type image --watch cliphist store")
    hl.exec_cmd("awww-daemon")
-   hl.exec_cmd("awww img ~/Downloads/wallhaven-9oovyk_1920x1080.png")
+   hl.exec_cmd("awww img ~/dotfiles/assets/wallpapers/main.png")
    hl.exec_cmd("hypridle")
 end)
 

@@ -1,30 +1,23 @@
 # Hyprland Dotfiles
 
-My personal Arch Linux + Hyprland configuration.
+My Arch Linux + Hyprland setup.
 
-## Included
+## Includes
 
 - Hyprland
-- Hypridle
 - Hyprlock
+- Hypridle
 - Waybar
-- Tofi
-- Wlogout
 - Kitty
 - Fish
 - Neovim
-
-## Structure
-
-.config/
-├── fish/
-├── hypr/
-├── kitty/
-├── nvim/
-├── tofi/
-├── waybar/
-└── wlogout/
+- Tofi
+- Wlogout
+- Wallpapers
 
 ## Installation
 
-Automated installation/bootstrap script coming soon.
+```bash
+git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+./install.sh
