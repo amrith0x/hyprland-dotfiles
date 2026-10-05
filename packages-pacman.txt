@@ -1,0 +1,33 @@
+# Core
+git
+stow
+
+# Hyprland
+hyprland
+hyprlock
+hypridle
+waybar
+kitty
+
+# Shell / editor
+fish
+neovim
+
+# Desktop utilities
+dolphin
+dunst
+hyprpicker
+cliphist
+wl-clipboard
+grim
+slurp
+brightnessctl
+playerctl
+qt6ct
+
+# Audio / PipeWire
+pipewire
+wireplumber
+
+# KDE / authentication
+polkit-kde-agent

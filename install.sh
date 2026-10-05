@@ -5,7 +5,10 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
-PACKAGES=(
+PACMAN_FILE="$DOTFILES_DIR/packages-pacman.txt"
+AUR_FILE="$DOTFILES_DIR/packages-aur.txt"
+
+STOW_PACKAGES=(
     hypr
     waybar
     kitty
@@ -16,107 +19,187 @@ PACKAGES=(
 )
 
 echo "======================================"
-echo "      Hyprland Dotfiles Installer"
+echo "      Hyprland Bootstrap Installer"
 echo "======================================"
 echo
-echo "Dotfiles directory: $DOTFILES_DIR"
-echo
 
 # --------------------------------------------------
-# Install GNU Stow if missing
+# Arch check
 # --------------------------------------------------
 
-if ! command -v stow >/dev/null 2>&1; then
-    echo "[+] GNU Stow not found."
-
-    if command -v pacman >/dev/null 2>&1; then
-        echo "[+] Installing GNU Stow..."
-        sudo pacman -S --needed stow
-    else
-        echo "[!] Could not detect pacman."
-        echo "Install GNU Stow manually and run this script again."
-        exit 1
-    fi
-else
-    echo "[✓] GNU Stow installed"
+if ! command -v pacman >/dev/null 2>&1; then
+    echo "[!] This installer currently supports Arch-based systems only."
+    exit 1
 fi
 
+# --------------------------------------------------
+# Read package file helper
+# --------------------------------------------------
+
+read_packages() {
+    grep -vE '^[[:space:]]*(#|$)' "$1"
+}
+
+# --------------------------------------------------
+# Official packages
+# --------------------------------------------------
+
+if [[ ! -f "$PACMAN_FILE" ]]; then
+    echo "[!] Missing packages-pacman.txt"
+    exit 1
+fi
+
+mapfile -t PACMAN_PACKAGES < <(read_packages "$PACMAN_FILE")
+
+echo "[+] Installing official Arch packages..."
+
+sudo pacman -S --needed "${PACMAN_PACKAGES[@]}"
+
+echo
+echo "[✓] Official packages installed"
 echo
 
 # --------------------------------------------------
-# Check packages
+# AUR helper
+# --------------------------------------------------
+
+if [[ -f "$AUR_FILE" ]]; then
+
+    mapfile -t AUR_PACKAGES < <(read_packages "$AUR_FILE")
+
+    if (( ${#AUR_PACKAGES[@]} > 0 )); then
+
+        if command -v yay >/dev/null 2>&1; then
+            echo "[+] Installing AUR packages with yay..."
+
+            yay -S --needed "${AUR_PACKAGES[@]}"
+
+        elif command -v paru >/dev/null 2>&1; then
+            echo "[+] Installing AUR packages with paru..."
+
+            paru -S --needed "${AUR_PACKAGES[@]}"
+
+        else
+            echo "[!]"
+            echo "[!] AUR packages are required but no AUR helper was found."
+            echo
+            echo "Required AUR packages:"
+            printf '    - %s\n' "${AUR_PACKAGES[@]}"
+            echo
+            echo "Install yay or paru, then run this script again."
+            exit 1
+        fi
+
+        echo
+        echo "[✓] AUR packages installed"
+        echo
+    fi
+fi
+
+# --------------------------------------------------
+# Validate Stow packages
 # --------------------------------------------------
 
 echo "[+] Checking dotfile packages..."
 
-for package in "${PACKAGES[@]}"; do
+for package in "${STOW_PACKAGES[@]}"; do
     if [[ ! -d "$DOTFILES_DIR/$package" ]]; then
-        echo "[!] Missing package: $package"
+        echo "[!] Missing dotfile package: $package"
         exit 1
     fi
 
     echo "    ✓ $package"
 done
 
-echo
-
 # --------------------------------------------------
-# Backup existing configs
+# Backup configs
 # --------------------------------------------------
 
 backup_config() {
+
     local name="$1"
     local target="$HOME/.config/$name"
 
-    # Ignore existing symlinks
     if [[ -L "$target" ]]; then
         return
     fi
 
     if [[ -e "$target" ]]; then
+
         mkdir -p "$BACKUP_DIR/.config"
 
-        echo "[+] Backing up existing $name config"
+        echo "[+] Backing up existing $name"
         mv "$target" "$BACKUP_DIR/.config/"
     fi
 }
 
-backup_config "hypr"
-backup_config "waybar"
-backup_config "kitty"
-backup_config "fish"
-backup_config "nvim"
-backup_config "tofi"
-backup_config "wlogout"
+echo
+echo "[+] Checking existing configs..."
+
+for package in "${STOW_PACKAGES[@]}"; do
+    backup_config "$package"
+done
+
+# --------------------------------------------------
+# Stow
+# --------------------------------------------------
 
 echo
-
-# --------------------------------------------------
-# Stow dotfiles
-# --------------------------------------------------
+echo "[+] Creating symlinks..."
 
 cd "$DOTFILES_DIR"
 
-echo "[+] Creating symlinks..."
+for package in "${STOW_PACKAGES[@]}"; do
 
-for package in "${PACKAGES[@]}"; do
     echo "    → $package"
-    stow --restow --target="$HOME" "$package"
+
+    stow \
+        --restow \
+        --target="$HOME" \
+        "$package"
+
 done
+
+# --------------------------------------------------
+# Fish info
+# --------------------------------------------------
+
+if command -v fish >/dev/null 2>&1; then
+
+    FISH_PATH="$(command -v fish)"
+
+    if [[ "${SHELL:-}" != "$FISH_PATH" ]]; then
+
+        echo
+        echo "[i] Fish is installed but isn't your login shell."
+        echo
+        echo "To change it:"
+        echo
+        echo "    chsh -s $FISH_PATH"
+
+    fi
+fi
+
+# --------------------------------------------------
+# Done
+# --------------------------------------------------
 
 echo
 echo "======================================"
-echo "       Installation complete 🎉"
+echo "          Bootstrap complete"
 echo "======================================"
 
 if [[ -d "$BACKUP_DIR" ]]; then
+
     echo
-    echo "Old configuration files were backed up to:"
+    echo "Previous configs:"
     echo "$BACKUP_DIR"
+
 fi
 
 echo
-echo "Symlinked packages:"
-printf '  - %s\n' "${PACKAGES[@]}"
+echo "Linked configs:"
+
+printf '  - %s\n' "${STOW_PACKAGES[@]}"
+
 echo
-echo "You may need to restart applications or log out/in."
