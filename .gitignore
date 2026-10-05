@@ -1,0 +1,12 @@
+# Backup files
+*.bak
+*~
+*.swp
+
+# Fish generated universal variables
+.config/fish/fish_variables
+
+# General junk
+.DS_Store
+Thumbs.db
+EOF
