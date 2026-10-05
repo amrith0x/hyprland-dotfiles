@@ -22,6 +22,9 @@ hyprpicker
 kitty
 kvantum
 neovim
+networkmanager
+python-gobject
+gtk-layer-shell
 noto-fonts
 pipewire
 playerctl

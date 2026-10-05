@@ -64,6 +64,7 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("awww-daemon")
    hl.exec_cmd("awww img ~/dotfiles/assets/wallpapers/main.png")
    hl.exec_cmd("hypridle")
+   hl.exec_cmd("numlockx on")
 end)
 
 

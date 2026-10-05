@@ -1,0 +1,89 @@
+/* Same palette, font, and rounding as Waybar and Hyprlock. */
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 12px;
+    border: none;
+    box-shadow: none;
+    text-shadow: none;
+    -gtk-icon-shadow: none;
+}
+
+window#wifi-dropdown { background: transparent; }
+
+.wifi-panel {
+    background: #1e1e2e;
+    padding: 14px;
+    border: 1px solid #313244;
+    border-radius: 10px;
+}
+
+label { color: #a6adc8; }
+.title { font-size: 14px; font-weight: bold; }
+.muted, .network-detail { color: #6c7086; font-size: 10px; }
+.footer { color: #585b70; font-size: 9px; }
+
+button {
+    background: #313244;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: background 150ms ease;
+}
+
+button:hover { background: #45475a; }
+button:focus { border-color: #83a4e7; }
+button:disabled { opacity: 0.5; }
+.icon-button { background: transparent; padding: 6px 9px; }
+.icon-button label { font-size: 16px; }
+.network-row { background: transparent; padding: 10px; }
+.network-name { font-weight: bold; }
+.network-icon { font-size: 20px; color: #7f849c; }
+button.connected { background: #262b3d; border-color: #39435d; }
+button.connected .network-icon,
+button.connected .network-detail { color: #83a4e7; }
+button.connected:hover { background: #313a50; }
+
+entry {
+    background: #181825;
+    color: #cdd6f4;
+    caret-color: #83a4e7;
+    border: 1px solid #313244;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+entry:focus { border-color: #83a4e7; }
+entry selection { background: #83a4e7; color: #11111b; }
+scrolledwindow, viewport { background: transparent; }
+scrollbar.vertical,
+scrollbar.vertical contents,
+scrollbar.vertical trough {
+    background: transparent;
+    border: none;
+    min-width: 4px;
+    padding: 0;
+    margin: 0;
+}
+
+scrollbar.vertical slider {
+    background: #45475a;
+    background-image: none;
+    border: none;
+    border-radius: 4px;
+    min-width: 4px;
+    min-height: 24px;
+    padding: 0;
+    margin: 0;
+}
+
+scrollbar.vertical slider:hover { background: #6c7086; }
+scrollbar.vertical button {
+    background: transparent;
+    border: none;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    -gtk-icon-source: none;
+}

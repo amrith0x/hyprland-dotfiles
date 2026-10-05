@@ -12,7 +12,7 @@
     ],
 
     "modules-right": [
-        "pulseaudio",
+        "group/volume",
         "network",
         "battery"
     ],
@@ -28,10 +28,32 @@
     "network": {
         "format-wifi": "󰤨 {essid}",
         "format-ethernet": "󰈀",
-        "format-disconnected": "󰤭"
+        "format-disconnected": "󰤭",
+        "tooltip-format-wifi": "{essid} · {signalStrength}%\nClick to select a network",
+        "tooltip-format-disconnected": "Disconnected\nClick to select a network",
+        "on-click": "python3 ~/.config/waybar/scripts/wifi-selector.py"
+    },
+
+    "group/volume": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 200,
+            "children-class": "volume-reveal"
+        },
+        "modules": ["pulseaudio", "pulseaudio/slider"]
     },
 
     "pulseaudio": {
-        "format": "󰕾 {volume}%"
+        "format": "󰕾 {volume}%",
+        "format-muted": "󰖁 Muted",
+        "scroll-step": 5,
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "tooltip-format": "{desc}\nClick to mute · Scroll to adjust volume"
+    },
+
+    "pulseaudio/slider": {
+        "min": 0,
+        "max": 100,
+        "orientation": "horizontal"
     }
 }

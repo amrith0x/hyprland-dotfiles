@@ -104,8 +104,46 @@ window#waybar {
 
 #pulseaudio {
     color: #a6adc8;
+    background: transparent;
+    margin: 0;
+    border-radius: 10px;
     border-left: 0px;
     border-right: 0px;
+}
+
+#volume {
+    background: #1e1e2e;
+    border-radius: 10px;
+    margin: 5px 5px 3px 0px;
+}
+
+#pulseaudio-slider {
+    background: transparent;
+    border-radius: 0px 10px 10px 0px;
+    padding: 0px 12px 0px 2px;
+    margin: 0;
+}
+
+#pulseaudio-slider trough {
+    min-width: 80px;
+    min-height: 6px;
+    border-radius: 10px;
+    background: #45475a;
+}
+
+#pulseaudio-slider highlight {
+    min-height: 6px;
+    border-radius: 10px;
+    background: #a6adc8;
+}
+
+#pulseaudio-slider slider {
+    min-width: 12px;
+    min-height: 12px;
+    border-radius: 50%;
+    background: #cdd6f4;
+    background-image: none;
+    box-shadow: none;
 }
 
 #pulseaudio.microphone {
