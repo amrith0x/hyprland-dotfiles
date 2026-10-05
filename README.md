@@ -28,4 +28,3 @@ My personal Arch Linux + Hyprland configuration.
 ## Installation
 
 Automated installation/bootstrap script coming soon.
-EOF
