@@ -2,6 +2,7 @@
 # Applications / theming
 # Audio / PipeWire
 brightnessctl
+bluez
 cliphist
 code
 # Core

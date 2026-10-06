@@ -45,6 +45,7 @@ window#waybar {
 #battery,
 #pulseaudio,
 #network,
+#bluetooth,
 #cpu,
 #memory,
 #workspaces,
@@ -75,12 +76,32 @@ window#waybar {
 }
 
 #cpu {
-    border-radius: 0px 10px 10px 0px;
-    margin-right: 10px;
+    border-radius: 10px 0px 0px 10px;
 }
 
 #memory {
-    border-radius: 10px 0px 0px 10px;
+    border-radius: 0;
+}
+
+#hardware {
+    background: #1e1e2e;
+    color: #a6adc8;
+    border-radius: 10px;
+    margin: 5px 5px 3px 0px;
+}
+
+#hardware #cpu,
+#hardware #memory,
+#custom-gpu,
+#custom-temperatures {
+    background: transparent;
+    margin: 0;
+    padding: 0px 10px;
+}
+
+#custom-temperatures {
+    color: #f9e2af;
+    border-left: 1px solid #45475a;
 }
 
 #window {
@@ -100,6 +121,14 @@ window#waybar {
     color:  #a6adc8;
     border-radius: 10px 0px 0px 10px;
 
+}
+
+#bluetooth {
+    color: #a6adc8;
+}
+
+#bluetooth.connected {
+    color: #89b4fa;
 }
 
 #pulseaudio {

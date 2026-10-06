@@ -12,17 +12,68 @@
     ],
 
     "modules-right": [
+        "group/hardware",
         "group/volume",
         "network",
+        "bluetooth",
         "battery"
     ],
+
+    "group/hardware": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 200,
+            "children-class": "hardware-reveal"
+        },
+        "modules": ["group/usage", "custom/temperatures"]
+    },
+
+    "group/usage": {
+        "orientation": "horizontal",
+        "modules": ["cpu", "memory", "custom/gpu"]
+    },
+
+    "cpu": {
+        "format": "CPU {usage}%",
+        "interval": 2,
+        "tooltip-format": "Intel Core i7-10750H @ 2.60 GHz\nUsage: {usage}%"
+    },
+
+    "memory": {
+        "format": "RAM {percentage}%",
+        "interval": 2,
+        "tooltip-format": "{used:0.1f} / {total:0.1f} GiB"
+    },
+
+    "custom/gpu": {
+        "exec": "python3 ~/.config/waybar/scripts/hardware.py gpu",
+        "return-type": "json",
+        "interval": 5
+    },
+
+    "custom/temperatures": {
+        "exec": "python3 ~/.config/waybar/scripts/hardware.py temperatures",
+        "return-type": "json",
+        "interval": 5
+    },
 
     "clock": {
         "format": "{:%H:%M}"
     },
 
     "battery": {
-        "format": "{capacity}%"
+        "interval": 10,
+        "format": "{icon} {capacity}%",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰂄 {capacity}%",
+        "format-full": "󰁹 {capacity}%",
+        "format-time": "{H} h {M} min",
+        "tooltip-format": "{timeTo}",
+        "tooltip-format-discharging": "Estimated remaining: {time}",
+        "tooltip-format-charging": "Charging",
+        "tooltip-format-plugged": "Charging",
+        "tooltip-format-full": "Fully charged"
     },
 
     "network": {
@@ -32,6 +83,18 @@
         "tooltip-format-wifi": "{essid} · {signalStrength}%\nClick to select a network",
         "tooltip-format-disconnected": "Disconnected\nClick to select a network",
         "on-click": "python3 ~/.config/waybar/scripts/wifi-selector.py"
+    },
+
+    "bluetooth": {
+        "format": "󰂯",
+        "format-off": "󰂲",
+        "format-disabled": "󰂲",
+        "format-no-controller": "󰂲",
+        "format-connected": "󰂱",
+        "tooltip-format": "Bluetooth · {status}\nClick to select a device",
+        "tooltip-format-connected": "{device_enumerate}\nClick to manage devices",
+        "tooltip-format-enumerate-connected": "{device_alias}",
+        "on-click": "python3 ~/.config/waybar/scripts/bluetooth-selector.py"
     },
 
     "group/volume": {

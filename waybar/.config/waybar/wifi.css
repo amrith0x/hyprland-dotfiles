@@ -8,7 +8,7 @@
     -gtk-icon-shadow: none;
 }
 
-window#wifi-dropdown { background: transparent; }
+window#wifi-dropdown, window#bluetooth-dropdown { background: transparent; }
 
 .wifi-panel {
     background: #1e1e2e;
