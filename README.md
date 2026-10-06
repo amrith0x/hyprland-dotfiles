@@ -11,8 +11,9 @@ My Arch Linux + Hyprland setup.
 - Fish
 - Neovim
 - Rofi application launcher
-- mpv video player
-- Wlogout
+- mpv video player with wallpaper-matched uosc controls
+- Pear Desktop for YouTube Music, with wallpaper colors and Waybar controls
+- Glass power dock
 - Thunar
 - Dunst notifications
 - Matching SDDM login theme (optional)
@@ -21,14 +22,41 @@ My Arch Linux + Hyprland setup.
 ## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/dotfiles
+git clone https://github.com/amrith0x/hyprland-dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
 
+Run as your regular desktop user on Arch, with sudo available. The installer
+bootstraps yay if neither yay nor paru exists, installs the official and AUR
+manifests, installs Firefox from Flathub, generates wallpaper palettes, links all
+configs, and configures GTK/Thunar and Pear before their first launch.
+The bundled GTK3 theme and uosc release need no separate download.
+
+To recreate this laptop's complete rice, including NVIDIA and the login screen:
+
+```bash
+./install.sh --with-nvidia --with-sddm
+```
+
+Inspect every planned step without changing anything:
+
+```bash
+./install.sh --dry-run --with-nvidia --with-sddm
+```
+
+The monitor rule targets this laptop's 1920×1080 eDP-1 display at 144 Hz and
+1.2 scaling. Adjust it for different hardware. Software versions follow Arch
+repositories; account sessions, browser data, and unrelated applications are
+not part of the rice. The initial wallpaper is `assets/wallpapers/main.png`;
+the wallpaper selector preserves your existing selection when rerunning setup.
+
+See [the installation audit](INSTALL-AUDIT.md) for component coverage, validation,
+and the reviewed package-cleanup command.
+
 The installer enables NetworkManager and Bluetooth immediately and at boot.
 It also installs the Python/GTK dependencies for the wallpaper, Wi-Fi, and
-Bluetooth selectors, plus the Fish prompt and Fastfetch dependencies. Thunar,
+Bluetooth selectors, plus the Fish prompt. Thunar,
 thumbnails, archive handling, Papirus icons, and dynamic Dunst notifications
 are configured automatically. Rofi handles app launching and clipboard history;
 mpv stays opaque during playback. Existing Thunar/Dunst configurations and any
@@ -72,6 +100,16 @@ Discord and Firefox's YouTube, fullscreen, and picture-in-picture windows stay
 fully opaque. Automatic idle dimming, locking, screen-off, and suspend are
 currently disabled; **Super+L** still locks manually. Hyprlock uses the wallpaper,
 a 12-hour clock, and no greeting.
+
+## Terminal greeting
+
+New Kitty/Fish terminals display a small random transparent portrait from
+`assets/terminal`, using Kitty's native `icat` renderer. Images fit inside a
+22-column × 10-line area while preserving their aspect ratio, with top/left
+padding and the prompt underneath. No character name is displayed. Add PNG or
+WebP cutouts to that folder to expand the rotation; images render at their
+original quality instead of being converted into character blocks. Other
+terminals skip the image greeting. Fastfetch remains available as a manual command.
 
 ## Thunar
 
@@ -139,8 +177,8 @@ the palette manually:
 python3 ~/.config/hypr/scripts/wallpaper-theme.py enable
 ```
 
-This recolors Hyprland borders, Waybar, Wi-Fi/Bluetooth panels, Kitty, Rofi, Thunar, Dunst,
-Wlogout, and Hyprlock. The palette stays dark; opacity, rounding, layout, and
+This recolors Hyprland borders, Waybar, Wi-Fi/Bluetooth panels, Kitty, Rofi, Thunar, Dunst, mpv/uosc, Pear Desktop,
+the power dock, and Hyprlock. The palette stays dark; opacity, rounding, layout, and
 warning colors are preserved. Open panels and the lock screen pick up changes
 the next time they open. Application themes such as VS Code and Neovim
 are not included.
@@ -177,6 +215,25 @@ Bluetooth requires the `bluez` package and its service:
 sudo systemctl enable --now bluetooth.service
 ```
 
+## YouTube Music
+
+Pear Desktop (`pear-desktop-bin` in the AUR) uses the wallpaper palette, matching
+fonts, rounded album artwork, and subtle accent highlights. The application
+launcher lists it as YouTube Music; its terminal command is `youtube-music`.
+After installing, open it once, quit completely, and configure it with:
+
+```bash
+python3 ~/dotfiles/scripts/setup-pear.py
+```
+
+This backs up existing settings, registers the generated CSS, and enables MPRIS
+through the Shortcuts plugin. Reopen Pear after changing wallpapers to load the
+new colors. Waybar shows the current track beside workspaces: left-click toggles
+playback, right-click goes to the next track, and middle-click goes to the previous
+track. Hover reveals previous, play/pause, and next buttons in an animated drawer.
+Hardware media keys also work through the existing playerctl bindings.
+See [Pear theme setup](pear/README.md).
+
 ## Shortcut mappings
 
 Super is the Windows key. These are the explicit mappings in this repository;
@@ -195,11 +252,12 @@ applications also have their own default shortcuts.
 | Super+J | Toggle split direction (dwindle) |
 | Super+B | Firefox (Flatpak) |
 | Super+C | VS Code |
-| Ctrl+Escape | Run `killall waybar || waybar` (stops running Waybar; starts it if absent) |
+| Ctrl+Escape | Reload Waybar, or start it if absent |
 | Super+V | Clipboard history through Rofi |
-| Super+P | Pick color and copy to clipboard |
+| Super+P | Pear Desktop / YouTube Music |
+| Super+Shift+P | Pick color and copy to clipboard |
 | Super+L | Lock screen |
-| Super+Escape | Wlogout power menu |
+| Super+Escape | Floating power dock |
 | Super+Arrow keys | Focus window in that direction |
 | Super+1–9 / 0 | Switch to workspace 1–9 / 10 |
 | Super+Shift+1–9 / 0 | Move window to workspace 1–9 / 10 |
@@ -216,9 +274,6 @@ applications also have their own default shortcuts.
 | Media play / pause | Toggle playback |
 | Three-finger horizontal swipe | Switch workspace |
 
-Inside Wlogout: **S** shuts down, **U** suspends, **L** locks, **E** logs out,
+Inside the power dock: **S** shuts down, **U** suspends, **L** locks, **E** logs out,
 and **R** reboots. No additional key mappings are defined in the tracked Kitty,
 Fish, or Neovim configuration.
-
-The Ctrl+Escape command stops Waybar on its first
-press rather than restarting it.

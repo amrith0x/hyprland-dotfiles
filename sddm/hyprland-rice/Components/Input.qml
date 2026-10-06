@@ -536,7 +536,7 @@ Column {
             Keys.onReturnPressed: clicked()
             Keys.onEnterPressed: clicked()
 
-            KeyNavigation.down: config.HideSystemButtons == "true" ? virtualKeyboard : systemButtons.firstButton
+            KeyNavigation.down: config.HideSystemButtons == "true" ? loginButton : systemButtons.firstButton
         }
     }
 

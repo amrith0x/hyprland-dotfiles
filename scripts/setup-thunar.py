@@ -39,6 +39,9 @@ def main():
     if not settings.has_section('Settings'):
         settings.add_section('Settings')
     settings['Settings']['gtk-application-prefer-dark-theme'] = 'true'
+    settings['Settings']['gtk-theme-name'] = 'Rose-Pine'
+    settings['Settings']['gtk-cursor-theme-name'] = 'breeze_cursors'
+    settings['Settings']['gtk-cursor-theme-size'] = '24'
     settings['Settings']['gtk-icon-theme-name'] = 'Papirus-Dark'
     settings['Settings']['gtk-font-name'] = 'JetBrainsMono Nerd Font 10'
     from io import StringIO
@@ -62,6 +65,10 @@ def main():
     if shutil.which('gsettings'):
         subprocess.run(['gsettings', 'set', 'org.gnome.desktop.interface',
                         'icon-theme', 'Papirus-Dark'], check=True)
+        subprocess.run(['gsettings', 'set', 'org.gnome.desktop.interface',
+                        'gtk-theme', 'Rose-Pine'], check=True)
+        subprocess.run(['gsettings', 'set', 'org.gnome.desktop.interface',
+                        'cursor-theme', 'breeze_cursors'], check=True)
     if BACKUP.exists():
         print('Previous GTK settings backed up to ' + str(BACKUP))
     print('Thunar configured: dark GTK styling, Papirus icons, folder default.')

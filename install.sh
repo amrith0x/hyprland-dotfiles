@@ -1,283 +1,139 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
 
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
-
-PACMAN_FILE="$DOTFILES_DIR/packages-pacman.txt"
-AUR_FILE="$DOTFILES_DIR/packages-aur.txt"
-NVIDIA_FILE="$DOTFILES_DIR/packages-nvidia.txt"
-SDDM_FILE="$DOTFILES_DIR/packages-sddm.txt"
+DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="$HOME/.config"
+BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S-%N)"
 INSTALL_NVIDIA=false
 INSTALL_SDDM=false
-
+DRY_RUN=false
 for argument in "$@"; do
     case "$argument" in
         --with-nvidia) INSTALL_NVIDIA=true ;;
         --with-sddm) INSTALL_SDDM=true ;;
+        --dry-run) DRY_RUN=true ;;
         -h|--help)
-            echo "Usage: ./install.sh [--with-nvidia] [--with-sddm]"
-            echo "  --with-nvidia  Install the NVIDIA open driver for Turing/newer GPUs and the stock linux kernel."
-            echo "  --with-sddm    Install SDDM dependencies and the wallpaper-matched login theme."
-            exit 0
-            ;;
+            echo "Usage: ./install.sh [--with-nvidia] [--with-sddm] [--dry-run]"
+            echo "  --with-nvidia  NVIDIA open driver for Turing/newer GPUs and the stock linux kernel."
+            echo "  --with-sddm    Install the matching login screen and enable Num Lock."
+            echo "  --dry-run      Print the complete installation plan without changing anything."
+            exit 0 ;;
         *) echo "Unknown option: $argument" >&2; exit 1 ;;
     esac
 done
-
-STOW_PACKAGES=(
-    hypr
-    waybar
-    kitty
-    fish
-    nvim
-    rofi
-    wlogout
-    thunar
-    dunst
-)
-
-echo "======================================"
-echo "      Hyprland Bootstrap Installer"
-echo "======================================"
-echo
-
-# --------------------------------------------------
-# Arch check
-# --------------------------------------------------
-
-if ! command -v pacman >/dev/null 2>&1; then
-    echo "[!] This installer currently supports Arch-based systems only."
+if (( EUID == 0 )); then
+    echo "Run as your desktop user, not root; the script uses sudo only where needed." >&2
+    exit 1
+fi
+if [[ "${XDG_CONFIG_HOME:-$CONFIG_DIR}" != "$CONFIG_DIR" ]]; then
+    echo "This Stow layout requires XDG_CONFIG_HOME to be ~/.config." >&2
+    exit 1
+fi
+if ! $DRY_RUN && ! command -v pacman >/dev/null; then
+    echo "This installer supports Arch-based systems only." >&2
     exit 1
 fi
 
-# --------------------------------------------------
-# Read package file helper
-# --------------------------------------------------
-
-read_packages() {
-    grep -vE '^[[:space:]]*(#|$)' "$1"
+run() {
+    if $DRY_RUN; then
+        printf '[plan]'; printf ' %q' "$@"; printf '\n'
+    else
+        "$@"
+    fi
 }
-
-# --------------------------------------------------
-# Official packages
-# --------------------------------------------------
-
-if [[ ! -f "$PACMAN_FILE" ]]; then
-    echo "[!] Missing packages-pacman.txt"
-    exit 1
-fi
-
-mapfile -t PACMAN_PACKAGES < <(read_packages "$PACMAN_FILE")
-
+read_packages() { sed -e 's/#.*//' -e '/^[[:space:]]*$/d' "$1"; }
+STOW_PACKAGES=(hypr waybar kitty fish nvim rofi wlogout thunar dunst mpv desktop)
+for package in "${STOW_PACKAGES[@]}"; do
+    [[ -d "$DOTFILES_DIR/$package" ]] || { echo "Missing Stow package: $package" >&2; exit 1; }
+done
+for file in packages-pacman.txt packages-aur.txt packages-nvidia.txt packages-sddm.txt; do
+    [[ -f "$DOTFILES_DIR/$file" ]] || { echo "Missing manifest: $file" >&2; exit 1; }
+done
+mapfile -t OFFICIAL_PACKAGES < <(read_packages "$DOTFILES_DIR/packages-pacman.txt")
+mapfile -t AUR_PACKAGES < <(read_packages "$DOTFILES_DIR/packages-aur.txt")
 if $INSTALL_NVIDIA; then
-    if [[ ! -f "$NVIDIA_FILE" ]]; then
-        echo "[!] Missing packages-nvidia.txt" >&2
-        exit 1
-    fi
-    mapfile -t NVIDIA_PACKAGES < <(read_packages "$NVIDIA_FILE")
-    PACMAN_PACKAGES+=("${NVIDIA_PACKAGES[@]}")
+    mapfile -t EXTRA_PACKAGES < <(read_packages "$DOTFILES_DIR/packages-nvidia.txt")
+    OFFICIAL_PACKAGES+=("${EXTRA_PACKAGES[@]}")
 fi
-
 if $INSTALL_SDDM; then
-    if [[ ! -f "$SDDM_FILE" ]]; then
-        echo "[!] Missing packages-sddm.txt" >&2
-        exit 1
-    fi
-    mapfile -t SDDM_PACKAGES < <(read_packages "$SDDM_FILE")
-    PACMAN_PACKAGES+=("${SDDM_PACKAGES[@]}")
+    mapfile -t EXTRA_PACKAGES < <(read_packages "$DOTFILES_DIR/packages-sddm.txt")
+    OFFICIAL_PACKAGES+=("${EXTRA_PACKAGES[@]}")
 fi
+run sudo pacman -S --needed "${OFFICIAL_PACKAGES[@]}"
+run sudo systemctl enable --now NetworkManager.service bluetooth.service
 
-echo "[+] Installing official Arch packages..."
-
-sudo pacman -S --needed "${PACMAN_PACKAGES[@]}"
-
-echo
-echo "[✓] Official packages installed"
-echo
-
-# The selectors use system services; enable them once for subsequent boots.
-echo "[+] Enabling Wi-Fi and Bluetooth services..."
-sudo systemctl enable --now NetworkManager.service bluetooth.service
-
-# --------------------------------------------------
-# AUR helper
-# --------------------------------------------------
-
-if [[ -f "$AUR_FILE" ]]; then
-
-    mapfile -t AUR_PACKAGES < <(read_packages "$AUR_FILE")
-
-    if (( ${#AUR_PACKAGES[@]} > 0 )); then
-
-        if command -v yay >/dev/null 2>&1; then
-            echo "[+] Installing AUR packages with yay..."
-
-            yay -S --needed "${AUR_PACKAGES[@]}"
-
-        elif command -v paru >/dev/null 2>&1; then
-            echo "[+] Installing AUR packages with paru..."
-
-            paru -S --needed "${AUR_PACKAGES[@]}"
-
-        else
-            echo "[!]"
-            echo "[!] AUR packages are required but no AUR helper was found."
-            echo
-            echo "Required AUR packages:"
-            printf '    - %s\n' "${AUR_PACKAGES[@]}"
-            echo
-            echo "Install yay or paru, then run this script again."
-            exit 1
-        fi
-
-        echo
-        echo "[✓] AUR packages installed"
-        echo
-    fi
-fi
-
-# --------------------------------------------------
-# Validate Stow packages
-# --------------------------------------------------
-
-echo "[+] Checking dotfile packages..."
-
-for package in "${STOW_PACKAGES[@]}"; do
-    if [[ ! -d "$DOTFILES_DIR/$package" ]]; then
-        echo "[!] Missing dotfile package: $package"
-        exit 1
-    fi
-
-    echo "    ✓ $package"
-done
-
-# --------------------------------------------------
-# Backup configs
-# --------------------------------------------------
-
-# Generate included files before moving any existing configuration out of the way.
-echo "[+] Preparing wallpaper colors and lock-screen background..."
-python3 "$DOTFILES_DIR/hypr/.config/hypr/scripts/wallpaper-theme.py" apply --no-reload
-
-backup_config() {
-
-    local name="$1"
-    if [[ "$name" == thunar ]]; then
-        backup_config Thunar
-        backup_config thunar-rice
-        return
-    fi
-    local target="$HOME/.config/$name"
-
-    if [[ -L "$target" ]]; then
-        return
-    fi
-
-    if [[ -e "$target" ]]; then
-
-        mkdir -p "$BACKUP_DIR/.config"
-
-        echo "[+] Backing up existing $name"
-        mv "$target" "$BACKUP_DIR/.config/"
-    fi
-}
-
-echo
-echo "[+] Checking existing configs..."
-
-# Clean the old launcher link only when it belongs to this checkout.
-if [[ -L "$HOME/.config/tofi" ]] && \
-   [[ "$(realpath -m -- "$HOME/.config/tofi")" == "$DOTFILES_DIR/tofi/.config/tofi" ]]; then
-    unlink "$HOME/.config/tofi"
-fi
-
-for package in "${STOW_PACKAGES[@]}"; do
-    backup_config "$package"
-done
-
-# --------------------------------------------------
-# Stow
-# --------------------------------------------------
-
-echo
-echo "[+] Creating symlinks..."
-
-cd "$DOTFILES_DIR"
-
-for package in "${STOW_PACKAGES[@]}"; do
-
-    echo "    → $package"
-
-    stow \
-        --restow \
-        --target="$HOME" \
-        "$package"
-
-done
-
-# Thunar's settings live in GTK and Xfconf rather than ~/.config/thunar.
-if [[ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
-    python3 "$DOTFILES_DIR/scripts/setup-thunar.py"
+# Install an AUR helper on a fresh Arch machine, using the user's account for makepkg.
+if command -v yay >/dev/null; then
+    AUR_HELPER=yay
+elif command -v paru >/dev/null; then
+    AUR_HELPER=paru
+elif $DRY_RUN; then
+    echo "[plan] Build yay from https://aur.archlinux.org/yay.git using makepkg -si."
+    AUR_HELPER=yay
 else
-    dbus-run-session -- python3 "$DOTFILES_DIR/scripts/setup-thunar.py"
+    AUR_BUILD_DIR="$(mktemp -d -t dotfiles-yay.XXXXXXXX)"
+    trap 'rm -rf -- "$AUR_BUILD_DIR"' EXIT
+    git clone https://aur.archlinux.org/yay.git "$AUR_BUILD_DIR/yay"
+    (cd "$AUR_BUILD_DIR/yay" && makepkg -si)
+    AUR_HELPER=yay
+fi
+run "$AUR_HELPER" -S --needed "${AUR_PACKAGES[@]}"
+
+# Super+B and the Fish wrapper use the Firefox Flatpak.
+if $DRY_RUN || ! flatpak info org.mozilla.firefox >/dev/null 2>&1; then
+    run flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    run flatpak install --user --noninteractive flathub org.mozilla.firefox
 fi
 
-if $INSTALL_SDDM; then
-    echo "[+] Installing the matching SDDM login theme..."
-    python3 "$DOTFILES_DIR/sddm/sync-theme.py"
-    sudo python3 "$DOTFILES_DIR/sddm/install-theme.py" "$DOTFILES_DIR/sddm/hyprland-rice"
-fi
+# Generate ignored includes before Stow, including mpv and Pear themes.
+run python3 "$DOTFILES_DIR/hypr/.config/hypr/scripts/wallpaper-theme.py" apply --no-reload
 
-# --------------------------------------------------
-# Fish info
-# --------------------------------------------------
-
-if command -v fish >/dev/null 2>&1; then
-
-    FISH_PATH="$(command -v fish)"
-
-    if [[ "${SHELL:-}" != "$FISH_PATH" ]]; then
-
-        echo
-        echo "[i] Fish is installed but isn't your login shell."
-        echo
-        echo "To change it:"
-        echo
-        echo "    chsh -s $FISH_PATH"
-
+backup_path() {
+    local relative="$1" target="$HOME/$1"
+    if [[ -L "$target" ]] && [[ "$(realpath -m -- "$target")" == "$DOTFILES_DIR/"* ]]; then
+        return
     fi
+    if [[ -e "$target" || -L "$target" ]]; then
+        run mkdir -p "$BACKUP_DIR/$(dirname -- "$relative")"
+        run mv -- "$target" "$BACKUP_DIR/$relative"
+    fi
+}
+for package in "${STOW_PACKAGES[@]}"; do
+    case "$package" in
+        thunar) backup_path .config/Thunar; backup_path .config/thunar-rice ;;
+        desktop) backup_path .config/qt6ct; backup_path .local/share/themes/Rose-Pine ;;
+        *) backup_path ".config/$package" ;;
+    esac
+done
+# Remove only the obsolete launcher link belonging to this checkout.
+if [[ -L "$CONFIG_DIR/tofi" ]] && [[ "$(realpath -m -- "$CONFIG_DIR/tofi")" == "$DOTFILES_DIR/tofi/.config/tofi" ]]; then
+    run unlink "$CONFIG_DIR/tofi"
 fi
+for package in "${STOW_PACKAGES[@]}"; do
+    run stow --dir="$DOTFILES_DIR" --restow --target="$HOME" "$package"
+done
 
-# --------------------------------------------------
-# Done
-# --------------------------------------------------
-
-echo
-echo "======================================"
-echo "          Bootstrap complete"
-echo "======================================"
-
-if [[ -d "$BACKUP_DIR" ]]; then
-
-    echo
-    echo "Previous configs:"
-    echo "$BACKUP_DIR"
-
+if [[ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+    run python3 "$DOTFILES_DIR/scripts/setup-thunar.py"
+else
+    run dbus-run-session -- python3 "$DOTFILES_DIR/scripts/setup-thunar.py"
 fi
-
-echo
-echo "Linked configs:"
-
-printf '  - %s\n' "${STOW_PACKAGES[@]}"
-
-echo
-
-if $INSTALL_NVIDIA; then
-    echo "NVIDIA driver installed. Reboot to load it, then verify with nvidia-smi."
-fi
-
+run python3 "$DOTFILES_DIR/scripts/setup-pear.py" --create --defer-running
 if $INSTALL_SDDM; then
-    echo "SDDM theme installed for the next login; the display manager was not restarted."
+    run python3 "$DOTFILES_DIR/sddm/sync-theme.py"
+    run sudo python3 -B "$DOTFILES_DIR/sddm/install-theme.py" "$DOTFILES_DIR/sddm/hyprland-rice"
+fi
+if $DRY_RUN; then
+    echo "Dry run complete; no files, packages, or services changed."
+else
+    echo "Rice installed. Existing configurations, if replaced, are in $BACKUP_DIR."
+    echo "Kitty starts Fish automatically. To make Fish your login shell: chsh -s /usr/bin/fish"
+    echo "Select Hyprland at login. Personal accounts still require signing in."
+    if $INSTALL_SDDM; then
+        echo "SDDM theme installed; the display manager was not enabled or restarted."
+        echo "For a fresh machine using SDDM: sudo systemctl enable sddm.service"
+    fi
+    if $INSTALL_NVIDIA; then
+        echo "Reboot to load the NVIDIA driver, then verify with nvidia-smi."
+    fi
 fi

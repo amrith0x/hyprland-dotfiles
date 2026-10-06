@@ -3,9 +3,10 @@
 from pathlib import Path
 from datetime import datetime
 import os
-import re
 import shutil
 import sys
+
+from configuration import disable_keyboard, set_ini_option
 
 if os.geteuid() != 0:
     raise SystemExit('Run through install.sh with sudo.')
@@ -31,31 +32,14 @@ for item in [destination, *destination.rglob('*')]:
     item.chmod(0o755 if item.is_dir() else 0o644)
     os.chown(item, 0, 0)
 old = config.read_text() if config.exists() else ''
-def set_ini_option(text, section_name, key, value):
-    lines = text.splitlines(keepends=True)
-    section_start = next((i for i, line in enumerate(lines)
-                          if line.strip() == '[' + section_name + ']'), None)
-    entry = key + '=' + value + '\n'
-    if section_start is None:
-        return text.rstrip() + '\n\n[' + section_name + ']\n' + entry
-    section_end = next((i for i in range(section_start + 1, len(lines))
-                        if lines[i].lstrip().startswith('[')), len(lines))
-    matches = [i for i in range(section_start + 1, section_end)
-               if re.match(r'^[ \t]*' + re.escape(key) + r'[ \t]*=', lines[i])]
-    if matches:
-        for i in matches:
-            lines[i] = entry
-    else:
-        if section_end and not lines[section_end - 1].endswith('\n'):
-            lines[section_end - 1] += '\n'
-        lines.insert(section_end, entry)
-    return ''.join(lines)
 
 updated = set_ini_option(old, 'Theme', 'Current', 'hyprland-rice')
-# /etc/sddm.conf takes precedence over virtualkbd.conf in the drop-in directory.
-updated = set_ini_option(updated, 'General', 'InputMethod', '')
+# Force the physical-keyboard Compose input method, including the Qt environment.
+updated = disable_keyboard(updated)
+updated = set_ini_option(updated, 'General', 'Numlock', 'on')
 config.write_text(updated)
 config.chmod(0o644)
 print('Installed /usr/share/sddm/themes/hyprland-rice')
-print('Disabled the SDDM on-screen keyboard (General/InputMethod=).')
+print('Disabled the SDDM on-screen keyboard (InputMethod/QT_IM_MODULE=compose).')
+print('Enabled Num Lock at the login screen.')
 print('Previous configuration backed up to:', backup)

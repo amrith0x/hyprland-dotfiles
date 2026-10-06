@@ -4,7 +4,8 @@
     "height": 32,
 
     "modules-left": [
-        "hyprland/workspaces"
+        "hyprland/workspaces",
+        "group/music"
     ],
 
     "modules-center": [
@@ -59,6 +60,51 @@
 
     "clock": {
         "format": "{:%I:%M %p}"
+    },
+
+    "mpris": {
+        "player": "YoutubeMusic",
+        "format": "󰎆 {dynamic}",
+        "format-paused": "󰏤 {dynamic}",
+        "dynamic-order": ["title", "artist"],
+        "dynamic-len": 32,
+        "title-len": 24,
+        "artist-len": 16,
+        "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next · Middle-click: previous",
+        "on-click": "playerctl --player=YoutubeMusic play-pause",
+        "on-click-right": "playerctl --player=YoutubeMusic next",
+        "on-click-middle": "playerctl --player=YoutubeMusic previous"
+    },
+
+    "group/music": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 200,
+            "children-class": "music-reveal"
+        },
+        "modules": ["mpris", "mpris#previous", "mpris#playpause", "mpris#next"]
+    },
+
+    "mpris#previous": {
+        "player": "YoutubeMusic",
+        "format": "󰒮",
+        "tooltip-format": "Previous track",
+        "on-click": "playerctl --player=YoutubeMusic previous"
+    },
+
+    "mpris#playpause": {
+        "player": "YoutubeMusic",
+        "format": "{status_icon}",
+        "status-icons": {"playing": "󰏤", "paused": "󰐊", "stopped": "󰐊"},
+        "tooltip-format": "Play / pause",
+        "on-click": "playerctl --player=YoutubeMusic play-pause"
+    },
+
+    "mpris#next": {
+        "player": "YoutubeMusic",
+        "format": "󰒭",
+        "tooltip-format": "Next track",
+        "on-click": "playerctl --player=YoutubeMusic next"
     },
 
     "battery": {

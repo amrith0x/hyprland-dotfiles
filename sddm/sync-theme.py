@@ -10,7 +10,7 @@ palette = dict(re.findall(r'\$(\w+) = rgb\(([0-9a-fA-F]{6})\)', (source / 'wallp
 foreground, background, accent = ('#' + palette[n] for n in ('wp_a6adc8', 'wp_11111b', 'wp_89b4fa'))
 text = (theme / 'theme.conf').read_text()
 background_keys = {'FormBackgroundColor', 'BackgroundColor', 'DimBackgroundColor', 'LoginFieldBackgroundColor', 'PasswordFieldBackgroundColor', 'DropdownBackgroundColor'}
-accent_keys = {'DropdownSelectedBackgroundColor', 'HighlightBackgroundColor', 'HoverUserIconColor', 'HoverPasswordIconColor', 'HoverSystemButtonsIconsColor', 'HoverSessionButtonTextColor', 'HoverVirtualKeyboardButtonTextColor'}
+accent_keys = {'DropdownSelectedBackgroundColor', 'HighlightBackgroundColor', 'HoverUserIconColor', 'HoverPasswordIconColor', 'HoverSystemButtonsIconsColor', 'HoverSessionButtonTextColor'}
 for key in re.findall(r'^(\w+Color)=', text, re.M):
     color = '#cc2222' if key == 'WarningColor' else background if key in background_keys else accent if key in accent_keys else foreground
     text = re.sub(r'^' + key + r'=.*$', key + '="' + color + '"', text, flags=re.M)

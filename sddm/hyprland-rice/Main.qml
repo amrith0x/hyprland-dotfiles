@@ -32,9 +32,4 @@ Pane {
         anchors.rightMargin: Math.min(100, root.width * 0.06)
         anchors.bottomMargin: 40
     }
-    Loader {
-        id: virtualKeyboard
-        active: false
-        visible: false
-    }
 }

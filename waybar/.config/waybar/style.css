@@ -43,6 +43,7 @@ window#waybar {
 }
 
 #window,
+#mpris,
 #clock,
 #battery,
 #pulseaudio,
@@ -58,6 +59,35 @@ window#waybar {
     margin: 3px 0px;
     margin-top: 5px;
     /* border: 1px solid @wp_181825; */
+}
+
+#music {
+    background: @wp_1e1e2e;
+    border-radius: 10px;
+    margin: 5px 0px 3px 8px;
+}
+
+#music #mpris {
+    background: transparent;
+    color: @wp_89b4fa;
+    border-radius: 10px;
+    margin: 0;
+    padding: 0px 10px;
+}
+#music #mpris.paused { color: @wp_a6adc8; }
+#music #mpris:hover { background: @wp_313244; }
+#music #mpris.previous,
+#music #mpris.playpause,
+#music #mpris.next {
+    color: @wp_a6adc8;
+    padding: 0px 8px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+#music #mpris.previous:hover,
+#music #mpris.playpause:hover,
+#music #mpris.next:hover {
+    color: @wp_89b4fa;
+    background: @wp_313244;
 }
 
 #backlight {

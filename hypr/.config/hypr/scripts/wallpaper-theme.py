@@ -134,6 +134,28 @@ def outputs(colors):
                 ('urgency_low', 'a6adc8', color('45475a')),
                 ('urgency_normal', 'cdd6f4', color('89b4fa')),
                 ('urgency_critical', 'cdd6f4', '#f38ba8'))))
+    uosc_colors = {
+        'foreground': '89b4fa', 'foreground_text': '11111b',
+        'background': '1e1e2e', 'background_text': 'cdd6f4',
+        'window_border': '45475a', 'curtain': '11111b',
+        'match': 'cba6f7', 'heatmap': '89b4fa',
+    }
+    files['mpv/.config/mpv/script-opts/uosc.conf'] = (
+        (ROOT / 'mpv/uosc-rice.conf').read_text()
+        + '\n# Generated wallpaper palette.\ncolor='
+        + ','.join(f'{name}={color(value)[1:]}' for name, value in uosc_colors.items())
+        + ',success=a6e3a1,error=f38ba8\n')
+    pear_roles = {
+        'background': '11111b', 'surface': '1e1e2e', 'surface_container': '313244',
+        'on_surface': 'cdd6f4', 'on_surface_variant': 'a6adc8', 'primary': '89b4fa',
+        'primary_container': '262b3d', 'outline_variant': '45475a',
+    }
+    pear_theme = (ROOT / 'pear/theme.css.in').read_text()
+    for role, value in pear_roles.items():
+        pear_theme = pear_theme.replace('{{' + role + '}}', color(value))
+    pear_theme = pear_theme.replace('{{on_primary_container}}',
+                                    colors['on_primary_container'] if colors else '#cdd6f4')
+    files['pear/theme.css'] = pear_theme
     return files
 
 

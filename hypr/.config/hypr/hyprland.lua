@@ -41,8 +41,9 @@ local menu        = "rofi -show drun"
 local browser     = "flatpak run org.mozilla.firefox"
 local IDE         = "code"
 local colorPicker = "hyprpicker | wl-copy"
+local musicPlayer = "youtube-music"
 local lockScreen  = "hyprlock"
-local logout      = "wlogout -b 5 -T 260 -B 260 -L 80 -R 80"
+local logout      = "python3 ~/.config/wlogout/power-dock.py"
 
 -------------------
 ---- AUTOSTART ----
@@ -64,7 +65,6 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("awww-daemon")
    hl.exec_cmd("python3 ~/.config/hypr/scripts/wallpaper-selector.py --restore")
    -- Automatic idle dimming, locking, and suspend are disabled for now.
-   hl.exec_cmd("numlockx on")
 end)
 
 
@@ -260,6 +260,7 @@ hl.config({
 
 hl.config({
     input = {
+        numlock_by_default = true,
         kb_layout  = "us",
         kb_variant = "",
         kb_model   = "",
@@ -314,11 +315,12 @@ hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(IDE))
 -- Reload Waybar
-hl.bind("CTRL + Escape", hl.dsp.exec_cmd("killall waybar || waybar"))
+hl.bind("CTRL + Escape", hl.dsp.exec_cmd("pkill -USR2 -x waybar || waybar"))
 -- Clipboard
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("python3 ~/.config/hypr/scripts/clipboard-selector.py"))
 -- Color Picker
-hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(colorPicker))
+hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(musicPlayer))
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd(colorPicker))
 -- Lock Screen
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(lockScreen))
 -- Logout
@@ -430,6 +432,12 @@ hl.window_rule({
 })
 
 -- Layer rules also return a handle.
+hl.layer_rule({
+    name = "glass-power-dock",
+    match = { namespace = "^power-dock$" },
+    blur = true,
+    ignore_alpha = 0.25,
+})
 -- local overlayLayerRule = hl.layer_rule({
 --     name  = "no-anim-overlay",
 --     match = { namespace = "^my-overlay$" },

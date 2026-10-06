@@ -1,2 +1,3 @@
-wlogout
 awww
+pear-desktop-bin
+visual-studio-code-bin

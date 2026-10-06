@@ -1,0 +1,51 @@
+@import "wallpaper-colors.css";
+
+window {
+    background-color: alpha(@wp_11111b, 0.18);
+    color: @wp_cdd6f4;
+    font-family: "JetBrainsMono Nerd Font";
+}
+
+#power-dock {
+    background-color: alpha(@wp_1e1e2e, 0.48);
+    background-image: linear-gradient(to bottom, alpha(@wp_cdd6f4, 0.12), alpha(@wp_cdd6f4, 0.02));
+    border: 1px solid alpha(@wp_cdd6f4, 0.28);
+    border-radius: 58px;
+    padding: 16px 22px 12px;
+    box-shadow: inset 0 1px alpha(@wp_cdd6f4, 0.16), 0 8px 28px alpha(@wp_11111b, 0.30);
+}
+
+#power-dock button {
+    background-image: none;
+    background-color: alpha(@wp_cdd6f4, 0.04);
+    color: @wp_a6adc8;
+    border: 1px solid alpha(@wp_cdd6f4, 0.10);
+    border-radius: 32px;
+    padding: 0;
+    min-width: 62px;
+    min-height: 62px;
+    box-shadow: none;
+    outline: none;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+#power-dock button label { font-size: 27px; }
+
+#power-dock button:hover,
+#power-dock button:focus {
+    color: @wp_89b4fa;
+    background-color: alpha(@wp_89b4fa, 0.14);
+    border-color: alpha(@wp_89b4fa, 0.55);
+}
+
+#power-dock button:active {
+    background-color: alpha(@wp_89b4fa, 0.28);
+}
+
+#power-dock .caption {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 10px;
+    font-weight: normal;
+    color: @wp_cdd6f4;
+    transition: opacity 150ms ease;
+}

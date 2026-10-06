@@ -8,6 +8,9 @@ fish/.config/fish/fish_variables
 thunar/.config/Thunar/accels.scm
 
 # General junk
+.agents/
+.codex/
+.aws/
 .DS_Store
 Thumbs.db
 
@@ -23,5 +26,7 @@ __pycache__/
 **/wallpaper-colors.conf
 **/wallpaper-colors.lua
 **/wallpaper-colors.rasi
+mpv/.config/mpv/script-opts/uosc.conf
+pear/theme.css
 hypr/.config/hypr/lock-wallpaper.png
 sddm/hyprland-rice/Backgrounds/lock-wallpaper.png

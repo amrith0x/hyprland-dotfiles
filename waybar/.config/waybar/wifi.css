@@ -38,6 +38,13 @@ button:focus { border-color: @wp_83a4e7; }
 button:disabled { opacity: 0.5; }
 .icon-button { background: transparent; padding: 6px 9px; }
 .icon-button label { font-size: 16px; }
+#bluetooth-dropdown button.bluetooth-refresh,
+#bluetooth-dropdown button.bluetooth-refresh:hover,
+#bluetooth-dropdown button.bluetooth-refresh:focus {
+    border-color: transparent;
+    outline: none;
+    box-shadow: none;
+}
 .network-row { background: transparent; padding: 10px; }
 .network-name { font-weight: bold; }
 .network-icon { font-size: 20px; color: @wp_7f849c; }
@@ -75,6 +82,18 @@ switch slider {
     margin: 2px;
 }
 switch:checked slider { background: @wp_1e1e2e; }
+#bluetooth-dropdown switch.bluetooth-power {
+    min-width: 36px;
+    min-height: 16px;
+    padding: 0;
+    border-radius: 10px;
+}
+#bluetooth-dropdown switch.bluetooth-power slider {
+    min-width: 12px;
+    min-height: 12px;
+    padding: 0;
+    margin: 1px;
+}
 scrolledwindow, viewport { background: transparent; }
 scrollbar.vertical,
 scrollbar.vertical contents,

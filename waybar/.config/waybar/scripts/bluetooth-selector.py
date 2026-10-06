@@ -45,8 +45,11 @@ class Bluetooth(Wifi):
         header = self.panel.get_children()[0]
         header.get_children()[0].set_text('󰂯  Bluetooth')
         self.refresh.set_tooltip_text('Scan for devices')
+        self.refresh.get_accessible().set_name('Scan for devices')
+        self.refresh.get_style_context().add_class('bluetooth-refresh')
         self.power = Gtk.Switch()
         self.power.set_valign(Gtk.Align.CENTER)
+        self.power.get_style_context().add_class('bluetooth-power')
         self.power.set_tooltip_text('Bluetooth power')
         self.power.connect('state-set', self.toggle_power)
         header.pack_end(self.power, False, False, 0)

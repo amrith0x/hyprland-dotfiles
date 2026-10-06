@@ -1,16 +1,20 @@
 # Core and configuration
 git
+base-devel
 stow
 dbus
 dconf
 gsettings-desktop-schemas
 xdg-utils
+procps-ng
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
+xorg-xwayland
 
 # Hyprland and desktop utilities
 hyprland
 hyprlock
 brightnessctl
-numlockx
 grim
 slurp
 hyprpicker
@@ -32,12 +36,15 @@ xarchiver
 # Wallpaper colors and application themes
 matugen
 papirus-icon-theme
+breeze-cursors
 kvantum
 qt6ct
+qt6-wayland
 
 # GTK selectors
 python
 python-gobject
+gdk-pixbuf2
 gtk3
 gtk-layer-shell
 
@@ -47,7 +54,6 @@ fish
 starship
 fastfetch
 neovim
-code
 flatpak
 mpv
 
@@ -57,6 +63,8 @@ bluez
 
 # Audio and hardware information
 pipewire
+pipewire-pulse
+pipewire-alsa
 wireplumber
 libpulse
 playerctl
@@ -67,4 +75,5 @@ polkit-kde-agent
 
 # Fonts
 noto-fonts
+noto-fonts-emoji
 ttf-jetbrains-mono-nerd
