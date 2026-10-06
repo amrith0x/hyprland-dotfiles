@@ -1,0 +1,12 @@
+configuration {
+    modi: "drun";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    terminal: "kitty";
+    matching: "fuzzy";
+    sort: true;
+    drun-display-format: "{name}";
+    display-drun: "󰍉";
+}
+
+@theme "launcher.rasi"

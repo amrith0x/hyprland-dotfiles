@@ -32,7 +32,7 @@ STOW_PACKAGES=(
     kitty
     fish
     nvim
-    tofi
+    rofi
     wlogout
     thunar
     dunst
@@ -186,6 +186,12 @@ backup_config() {
 
 echo
 echo "[+] Checking existing configs..."
+
+# Clean the old launcher link only when it belongs to this checkout.
+if [[ -L "$HOME/.config/tofi" ]] && \
+   [[ "$(realpath -m -- "$HOME/.config/tofi")" == "$DOTFILES_DIR/tofi/.config/tofi" ]]; then
+    unlink "$HOME/.config/tofi"
+fi
 
 for package in "${STOW_PACKAGES[@]}"; do
     backup_config "$package"

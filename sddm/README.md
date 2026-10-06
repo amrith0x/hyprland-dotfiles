@@ -31,7 +31,7 @@ with `--with-nvidia`. Both installation paths install the packages listed in
 The staged background is generated locally and is not committed.
 
 To revert, copy the printed backup's sddm.conf to /etc/sddm.conf using sudo.
-Hyprlock changes have their own backup under ~/dotfiles-backup/login-theme-*.
+Hyprlock configuration is tracked in the dotfiles repository.
 
 Validation: greeter test mode loaded successfully; a Qt Quick render was visually
 inspected. Authentication was not tested in a real SDDM session.

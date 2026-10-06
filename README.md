@@ -6,12 +6,12 @@ My Arch Linux + Hyprland setup.
 
 - Hyprland
 - Hyprlock
-- Hypridle
 - Waybar
 - Kitty
 - Fish
 - Neovim
-- Tofi
+- Rofi application launcher
+- mpv video player
 - Wlogout
 - Thunar
 - Dunst notifications
@@ -30,7 +30,8 @@ The installer enables NetworkManager and Bluetooth immediately and at boot.
 It also installs the Python/GTK dependencies for the wallpaper, Wi-Fi, and
 Bluetooth selectors, plus the Fish prompt and Fastfetch dependencies. Thunar,
 thumbnails, archive handling, Papirus icons, and dynamic Dunst notifications
-are configured automatically. Existing Thunar/Dunst configurations and any
+are configured automatically. Rofi handles app launching and clipboard history;
+mpv stays opaque during playback. Existing Thunar/Dunst configurations and any
 modified GTK settings are backed up before replacement.
 
 To include the matching SDDM login screen:
@@ -70,8 +71,7 @@ power slider. These settings are installed through the existing Stow packages.
 Discord and Firefox's YouTube, fullscreen, and picture-in-picture windows stay
 fully opaque. Automatic idle dimming, locking, screen-off, and suspend are
 currently disabled; **Super+L** still locks manually. Hyprlock uses the wallpaper,
-a 12-hour clock, and no greeting. The terminal-inhibitor helper is available in
-the scripts directory but is not started while automatic idle handling is disabled.
+a 12-hour clock, and no greeting.
 
 ## Thunar
 
@@ -92,6 +92,18 @@ To reapply preferences and the default folder handler after Stow:
 ```bash
 python3 scripts/setup-thunar.py
 ```
+
+## Application launcher
+
+**Super+A** opens Rofi with a centered search panel, Papirus app icons, fuzzy
+matching, and seven visible results. The background, border, and selection colors
+come from the wallpaper palette. Reopening the launcher loads the latest colors;
+no restart is needed. The layout adapts to narrower monitors.
+
+**Super+V** opens clipboard history in the same transparent Rofi theme. Search
+and select an entry to copy it, then paste normally. Text and image entries are
+supported, history IDs are hidden, and Escape preserves the current clipboard.
+The existing `wl-paste` watchers keep recording clipboard history at login.
 
 ## Wallpaper selector
 
@@ -127,7 +139,7 @@ the palette manually:
 python3 ~/.config/hypr/scripts/wallpaper-theme.py enable
 ```
 
-This recolors Hyprland borders, Waybar, Wi-Fi/Bluetooth panels, Kitty, Tofi, Thunar, Dunst,
+This recolors Hyprland borders, Waybar, Wi-Fi/Bluetooth panels, Kitty, Rofi, Thunar, Dunst,
 Wlogout, and Hyprlock. The palette stays dark; opacity, rounding, layout, and
 warning colors are preserved. Open panels and the lock screen pick up changes
 the next time they open. Application themes such as VS Code and Neovim
@@ -150,7 +162,7 @@ The main configs load separate generated `wallpaper-colors.*` files, so changing
 a wallpaper does not rewrite your layout or keybinds. Generated palettes, the
 lock-screen image, and `.theme-runtime/` caches are ignored by Git. No trial
 backups are required. `status` reports whether automatic recoloring is enabled.
-The installer includes Matugen; a local copy is also supported.
+The installer includes the system Matugen package.
 
 ## Bluetooth
 
@@ -178,13 +190,13 @@ applications also have their own default shortcuts.
 | Super+F | Thunar file manager |
 | Super+W | Toggle floating window |
 | Super+Shift+W | Wallpaper selector |
-| Super+A | Tofi application launcher |
+| Super+A | Rofi application launcher |
 | Super+R | Toggle pseudotiling |
 | Super+J | Toggle split direction (dwindle) |
 | Super+B | Firefox (Flatpak) |
 | Super+C | VS Code |
 | Ctrl+Escape | Run `killall waybar || waybar` (stops running Waybar; starts it if absent) |
-| Super+V | Clipboard history through Tofi |
+| Super+V | Clipboard history through Rofi |
 | Super+P | Pick color and copy to clipboard |
 | Super+L | Lock screen |
 | Super+Escape | Wlogout power menu |
@@ -208,6 +220,5 @@ Inside Wlogout: **S** shuts down, **U** suspends, **L** locks, **E** logs out,
 and **R** reboots. No additional key mappings are defined in the tracked Kitty,
 Fish, or Neovim configuration.
 
-The current Super+V command begins with `exec,`, which may prevent the clipboard
-picker from launching. The Ctrl+Escape command also stops Waybar on its first
+The Ctrl+Escape command stops Waybar on its first
 press rather than restarting it.

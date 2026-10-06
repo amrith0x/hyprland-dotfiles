@@ -37,7 +37,7 @@ hl.monitor({
 -- Set programs t | wl-copy hat you use
 local terminal = "kitty"
 local fileManager = "thunar"
-local menu        = "tofi-drun -c ~/.config/tofi/configA --drun-launch=true"
+local menu        = "rofi -show drun"
 local browser     = "flatpak run org.mozilla.firefox"
 local IDE         = "code"
 local colorPicker = "hyprpicker | wl-copy"
@@ -316,7 +316,7 @@ hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(IDE))
 -- Reload Waybar
 hl.bind("CTRL + Escape", hl.dsp.exec_cmd("killall waybar || waybar"))
 -- Clipboard
-hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("exec, cliphist list | tofi -c ~/.config/tofi/configV | cliphist decode | wl-copy"))
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("python3 ~/.config/hypr/scripts/clipboard-selector.py"))
 -- Color Picker
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(colorPicker))
 -- Lock Screen
@@ -384,6 +384,11 @@ hl.window_rule({
 -- Match native and Flatpak Firefox; titles update when switching tabs.
 local firefox_class = "(?i)(firefox|org[.]mozilla[.]firefox)"
 local video_opacity = "1.0 override 1.0 override 1.0 override"
+hl.window_rule({
+    name = "opaque-mpv",
+    match = { class = "(?i)(mpv|io[.]mpv[.]Mpv)" },
+    opacity = video_opacity,
+})
 hl.window_rule({
     name = "opaque-firefox-youtube",
     match = { class = firefox_class, title = "(?i).*youtube.*" },

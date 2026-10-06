@@ -22,5 +22,6 @@ __pycache__/
 **/wallpaper-colors.css
 **/wallpaper-colors.conf
 **/wallpaper-colors.lua
+**/wallpaper-colors.rasi
 hypr/.config/hypr/lock-wallpaper.png
 sddm/hyprland-rice/Backgrounds/lock-wallpaper.png

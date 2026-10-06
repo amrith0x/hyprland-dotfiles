@@ -1,59 +1,70 @@
+# Core and configuration
+git
+stow
+dbus
+dconf
+gsettings-desktop-schemas
+xdg-utils
 
-# Applications / theming
-# Audio / PipeWire
+# Hyprland and desktop utilities
+hyprland
+hyprlock
 brightnessctl
-bluez
+numlockx
+grim
+slurp
+hyprpicker
+wl-clipboard
 cliphist
-code
-# Core
-# Desktop utilities
+rofi
+waybar
+dunst
+libnotify
+
+# File manager and archives
 thunar
 thunar-archive-plugin
 tumbler
 gvfs
-xarchiver
-papirus-icon-theme
-xdg-utils
-dbus
-dconf
-gsettings-desktop-schemas
 xfconf
-libnotify
-dunst
-fish
-fastfetch
-flatpak
-# Fonts
-git
-grim
-hypridle
-hyprland
-# Hyprland
-hyprlock
-hyprpicker
-# KDE / authentication
-kitty
-kvantum
+xarchiver
+
+# Wallpaper colors and application themes
 matugen
-neovim
-networkmanager
-numlockx
-pciutils
+papirus-icon-theme
+kvantum
+qt6ct
+
+# GTK selectors
 python
 python-gobject
 gtk3
 gtk-layer-shell
-noto-fonts
+
+# Applications and shell
+kitty
+fish
+starship
+fastfetch
+neovim
+code
+flatpak
+mpv
+
+# Network and Bluetooth
+networkmanager
+bluez
+
+# Audio and hardware information
 pipewire
+wireplumber
 libpulse
 playerctl
+pciutils
+
+# Authentication
 polkit-kde-agent
-qt6ct
-# Shell / editor
-slurp
-stow
-starship
+
+# Fonts
+noto-fonts
 ttf-jetbrains-mono-nerd
-waybar
-wireplumber
-wl-clipboard
