@@ -7,7 +7,18 @@ cliphist
 code
 # Core
 # Desktop utilities
-dolphin
+thunar
+thunar-archive-plugin
+tumbler
+gvfs
+xarchiver
+papirus-icon-theme
+xdg-utils
+dbus
+dconf
+gsettings-desktop-schemas
+xfconf
+libnotify
 dunst
 fish
 fastfetch

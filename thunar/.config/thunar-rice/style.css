@@ -1,0 +1,47 @@
+@import url("wallpaper-colors.css");
+
+/* Keep these overrides scoped to Thunar. */
+window.thunar {
+    background-color: @wp_11111b;
+    color: @wp_cdd6f4;
+}
+window.thunar .view {
+    background-color: @wp_11111b;
+    color: @wp_cdd6f4;
+}
+window.thunar .sidebar .view {
+    background-color: @wp_1e1e2e;
+    padding: 6px;
+}
+window.thunar .view:selected {
+    background-color: @wp_262b3d;
+    color: @wp_cdd6f4;
+}
+window.thunar toolbar {
+    background: @wp_1e1e2e;
+    border: none;
+    padding: 4px 6px;
+}
+window.thunar toolbar button {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 5px;
+    padding: 6px;
+}
+window.thunar toolbar button:hover {
+    background: @wp_262b3d;
+    color: @wp_89b4fa;
+}
+window.thunar entry {
+    background: @wp_11111b;
+    color: @wp_cdd6f4;
+    border-color: @wp_45475a;
+    border-radius: 5px;
+}
+window.thunar entry:focus { border-color: @wp_89b4fa; }
+window.thunar statusbar {
+    background: @wp_1e1e2e;
+    color: @wp_a6adc8;
+    padding: 4px 8px;
+}

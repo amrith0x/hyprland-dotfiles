@@ -5,6 +5,7 @@
 
 # Fish generated universal variables
 fish/.config/fish/fish_variables
+thunar/.config/Thunar/accels.scm
 
 # General junk
 .DS_Store
@@ -22,3 +23,4 @@ __pycache__/
 **/wallpaper-colors.conf
 **/wallpaper-colors.lua
 hypr/.config/hypr/lock-wallpaper.png
+sddm/hyprland-rice/Backgrounds/lock-wallpaper.png

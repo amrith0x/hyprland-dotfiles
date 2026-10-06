@@ -36,7 +36,7 @@ hl.monitor({
 
 -- Set programs t | wl-copy hat you use
 local terminal = "kitty"
-local fileManager = "dolphin"
+local fileManager = "thunar"
 local menu        = "tofi-drun -c ~/.config/tofi/configA --drun-launch=true"
 local browser     = "flatpak run org.mozilla.firefox"
 local IDE         = "code"
@@ -63,7 +63,7 @@ hl.on("hyprland.start", function ()
    hl.exec_cmd("wl-paste --type image --watch cliphist store")
    hl.exec_cmd("awww-daemon")
    hl.exec_cmd("python3 ~/.config/hypr/scripts/wallpaper-selector.py --restore")
-   hl.exec_cmd("hypridle")
+   -- Automatic idle dimming, locking, and suspend are disabled for now.
    hl.exec_cmd("numlockx on")
 end)
 
@@ -373,6 +373,32 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- and https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
 -- Example window rules that are useful
+
+-- Discord embeds screenshares in its main window; keep them opaque in every state.
+hl.window_rule({
+    name = "opaque-discord",
+    match = { class = "(?i)discord" },
+    opacity = "1.0 override 1.0 override 1.0 override",
+})
+
+-- Match native and Flatpak Firefox; titles update when switching tabs.
+local firefox_class = "(?i)(firefox|org[.]mozilla[.]firefox)"
+local video_opacity = "1.0 override 1.0 override 1.0 override"
+hl.window_rule({
+    name = "opaque-firefox-youtube",
+    match = { class = firefox_class, title = "(?i).*youtube.*" },
+    opacity = video_opacity,
+})
+hl.window_rule({
+    name = "opaque-firefox-fullscreen",
+    match = { class = firefox_class, fullscreen = true },
+    opacity = video_opacity,
+})
+hl.window_rule({
+    name = "opaque-firefox-picture-in-picture",
+    match = { class = firefox_class, title = "(?i).*picture.in.picture.*" },
+    opacity = video_opacity,
+})
 
 local suppressMaximizeRule = hl.window_rule({
     -- Ignore maximize requests from all apps. You'll probably like this.

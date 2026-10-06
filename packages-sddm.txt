@@ -1,0 +1,5 @@
+# Optional: ./install.sh --with-sddm
+sddm
+qt6-declarative
+qt6-svg
+qt6-virtualkeyboard

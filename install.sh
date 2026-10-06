@@ -8,14 +8,18 @@ BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 PACMAN_FILE="$DOTFILES_DIR/packages-pacman.txt"
 AUR_FILE="$DOTFILES_DIR/packages-aur.txt"
 NVIDIA_FILE="$DOTFILES_DIR/packages-nvidia.txt"
+SDDM_FILE="$DOTFILES_DIR/packages-sddm.txt"
 INSTALL_NVIDIA=false
+INSTALL_SDDM=false
 
 for argument in "$@"; do
     case "$argument" in
         --with-nvidia) INSTALL_NVIDIA=true ;;
+        --with-sddm) INSTALL_SDDM=true ;;
         -h|--help)
-            echo "Usage: ./install.sh [--with-nvidia]"
+            echo "Usage: ./install.sh [--with-nvidia] [--with-sddm]"
             echo "  --with-nvidia  Install the NVIDIA open driver for Turing/newer GPUs and the stock linux kernel."
+            echo "  --with-sddm    Install SDDM dependencies and the wallpaper-matched login theme."
             exit 0
             ;;
         *) echo "Unknown option: $argument" >&2; exit 1 ;;
@@ -30,6 +34,8 @@ STOW_PACKAGES=(
     nvim
     tofi
     wlogout
+    thunar
+    dunst
 )
 
 echo "======================================"
@@ -72,6 +78,15 @@ if $INSTALL_NVIDIA; then
     fi
     mapfile -t NVIDIA_PACKAGES < <(read_packages "$NVIDIA_FILE")
     PACMAN_PACKAGES+=("${NVIDIA_PACKAGES[@]}")
+fi
+
+if $INSTALL_SDDM; then
+    if [[ ! -f "$SDDM_FILE" ]]; then
+        echo "[!] Missing packages-sddm.txt" >&2
+        exit 1
+    fi
+    mapfile -t SDDM_PACKAGES < <(read_packages "$SDDM_FILE")
+    PACMAN_PACKAGES+=("${SDDM_PACKAGES[@]}")
 fi
 
 echo "[+] Installing official Arch packages..."
@@ -142,9 +157,18 @@ done
 # Backup configs
 # --------------------------------------------------
 
+# Generate included files before moving any existing configuration out of the way.
+echo "[+] Preparing wallpaper colors and lock-screen background..."
+python3 "$DOTFILES_DIR/hypr/.config/hypr/scripts/wallpaper-theme.py" apply --no-reload
+
 backup_config() {
 
     local name="$1"
+    if [[ "$name" == thunar ]]; then
+        backup_config Thunar
+        backup_config thunar-rice
+        return
+    fi
     local target="$HOME/.config/$name"
 
     if [[ -L "$target" ]]; then
@@ -171,10 +195,6 @@ done
 # Stow
 # --------------------------------------------------
 
-# Generate included palette files and the lock-screen image before linking configs.
-echo "[+] Preparing wallpaper colors and lock-screen background..."
-python3 "$DOTFILES_DIR/hypr/.config/hypr/scripts/wallpaper-theme.py" apply --no-reload
-
 echo
 echo "[+] Creating symlinks..."
 
@@ -190,6 +210,19 @@ for package in "${STOW_PACKAGES[@]}"; do
         "$package"
 
 done
+
+# Thunar's settings live in GTK and Xfconf rather than ~/.config/thunar.
+if [[ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+    python3 "$DOTFILES_DIR/scripts/setup-thunar.py"
+else
+    dbus-run-session -- python3 "$DOTFILES_DIR/scripts/setup-thunar.py"
+fi
+
+if $INSTALL_SDDM; then
+    echo "[+] Installing the matching SDDM login theme..."
+    python3 "$DOTFILES_DIR/sddm/sync-theme.py"
+    sudo python3 "$DOTFILES_DIR/sddm/install-theme.py" "$DOTFILES_DIR/sddm/hyprland-rice"
+fi
 
 # --------------------------------------------------
 # Fish info
@@ -237,4 +270,8 @@ echo
 
 if $INSTALL_NVIDIA; then
     echo "NVIDIA driver installed. Reboot to load it, then verify with nvidia-smi."
+fi
+
+if $INSTALL_SDDM; then
+    echo "SDDM theme installed for the next login; the display manager was not restarted."
 fi

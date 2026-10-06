@@ -13,6 +13,9 @@ My Arch Linux + Hyprland setup.
 - Neovim
 - Tofi
 - Wlogout
+- Thunar
+- Dunst notifications
+- Matching SDDM login theme (optional)
 - Wallpapers
 
 ## Installation
@@ -25,7 +28,26 @@ cd ~/dotfiles
 
 The installer enables NetworkManager and Bluetooth immediately and at boot.
 It also installs the Python/GTK dependencies for the wallpaper, Wi-Fi, and
-Bluetooth selectors, plus the Fish prompt and Fastfetch dependencies.
+Bluetooth selectors, plus the Fish prompt and Fastfetch dependencies. Thunar,
+thumbnails, archive handling, Papirus icons, and dynamic Dunst notifications
+are configured automatically. Existing Thunar/Dunst configurations and any
+modified GTK settings are backed up before replacement.
+
+To include the matching SDDM login screen:
+
+```bash
+./install.sh --with-sddm
+```
+
+This installs SDDM and its Qt theme dependencies, refreshes the login background
+and colors from the wallpaper, and installs the theme with a configuration
+backup. It does not restart or enable the display-manager service. On a fresh
+machine, enable SDDM separately if it is your chosen display manager.
+See [SDDM setup and rollback](sddm/README.md). Both optional flags can be combined:
+
+```bash
+./install.sh --with-nvidia --with-sddm
+```
 
 For this laptop's RTX 2060 with the standard Arch `linux` kernel, use:
 
@@ -45,6 +67,31 @@ CPU, RAM, and NVIDIA GPU usage; hover expands CPU/GPU temperatures and shows
 the hardware models. Battery hover shows remaining runtime when unplugged,
 Charging when plugged in, or Fully charged. The Bluetooth panel includes a
 power slider. These settings are installed through the existing Stow packages.
+Discord and Firefox's YouTube, fullscreen, and picture-in-picture windows stay
+fully opaque. Automatic idle dimming, locking, screen-off, and suspend are
+currently disabled; **Super+L** still locks manually. Hyprlock uses the wallpaper,
+a 12-hour clock, and no greeting. The terminal-inhibitor helper is available in
+the scripts directory but is not started while automatic idle handling is disabled.
+
+## Thunar
+
+**Super+F** opens Thunar, the default handler for folders. It uses Papirus-Dark
+icons, a compact toolbar, breadcrumb navigation, a Places sidebar, and local
+image thumbnails. Right-click a folder for **Open Kitty here**; Xarchiver handles
+archive creation/extraction through the archive plugin. Existing GTK settings
+are backed up under `~/.dotfiles-backup/thunar-*` when setup changes them.
+
+Thunar's backgrounds, sidebar, selections, and toolbar accents use the same
+wallpaper palette as Waybar and Kitty. The wallpaper generator updates
+`thunar/.config/thunar-rice/wallpaper-colors.css` automatically. Close all Thunar
+windows and reopen it to reload newly generated colors. Papirus icons are shared
+with other GTK apps; the custom colors are scoped to Thunar.
+
+To reapply preferences and the default folder handler after Stow:
+
+```bash
+python3 scripts/setup-thunar.py
+```
 
 ## Wallpaper selector
 
@@ -80,11 +127,18 @@ the palette manually:
 python3 ~/.config/hypr/scripts/wallpaper-theme.py enable
 ```
 
-This recolors Hyprland borders, Waybar, Wi-Fi/Bluetooth panels, Kitty, Tofi,
+This recolors Hyprland borders, Waybar, Wi-Fi/Bluetooth panels, Kitty, Tofi, Thunar, Dunst,
 Wlogout, and Hyprlock. The palette stays dark; opacity, rounding, layout, and
 warning colors are preserved. Open panels and the lock screen pick up changes
-the next time they open. Application themes such as Dolphin, VS Code, and Neovim
+the next time they open. Application themes such as VS Code and Neovim
 are not included.
+
+Dunst notifications use dark wallpaper-colored surfaces, matching fonts and
+corners, and a wallpaper-derived accent border. Colors live in a generated
+`dunstrc.d/wallpaper-colors.conf` drop-in; selecting a wallpaper reloads Dunst
+automatically without restarting it. Critical notifications retain a pink/red
+border and remain visible until dismissed. Left-click dismisses one notification;
+right-click dismisses all, and middle-click invokes an available action.
 
 To switch back to the static colors and disable automatic recoloring:
 
@@ -121,7 +175,7 @@ applications also have their own default shortcuts.
 | Super+T | Kitty terminal |
 | Super+Q | Close active window |
 | Super+M | Exit Hyprland (hyprshutdown if available) |
-| Super+F | Dolphin file manager |
+| Super+F | Thunar file manager |
 | Super+W | Toggle floating window |
 | Super+Shift+W | Wallpaper selector |
 | Super+A | Tofi application launcher |

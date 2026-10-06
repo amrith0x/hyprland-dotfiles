@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+  <action>
+    <icon>utilities-terminal</icon>
+    <name>Open Kitty here</name>
+    <unique-id>rice-open-kitty</unique-id>
+    <command>kitty --directory %f</command>
+    <description>Open a terminal in this folder</description>
+    <patterns>*</patterns>
+    <directories/>
+  </action>
+</actions>
