@@ -1,3 +1,5 @@
+@import "wallpaper-colors.css";
+
 /* Same palette, font, and rounding as Waybar and Hyprlock. */
 * {
     font-family: "JetBrainsMono Nerd Font", monospace;
@@ -11,19 +13,19 @@
 window#wifi-dropdown, window#bluetooth-dropdown { background: transparent; }
 
 .wifi-panel {
-    background: #1e1e2e;
+    background: @wp_1e1e2e;
     padding: 14px;
-    border: 1px solid #313244;
+    border: 1px solid @wp_313244;
     border-radius: 10px;
 }
 
-label { color: #a6adc8; }
+label { color: @wp_a6adc8; }
 .title { font-size: 14px; font-weight: bold; }
-.muted, .network-detail { color: #6c7086; font-size: 10px; }
-.footer { color: #585b70; font-size: 9px; }
+.muted, .network-detail { color: @wp_6c7086; font-size: 10px; }
+.footer { color: @wp_585b70; font-size: 9px; }
 
 button {
-    background: #313244;
+    background: @wp_313244;
     background-image: none;
     border: 1px solid transparent;
     border-radius: 8px;
@@ -31,48 +33,48 @@ button {
     transition: background 150ms ease;
 }
 
-button:hover { background: #45475a; }
-button:focus { border-color: #83a4e7; }
+button:hover { background: @wp_45475a; }
+button:focus { border-color: @wp_83a4e7; }
 button:disabled { opacity: 0.5; }
 .icon-button { background: transparent; padding: 6px 9px; }
 .icon-button label { font-size: 16px; }
 .network-row { background: transparent; padding: 10px; }
 .network-name { font-weight: bold; }
-.network-icon { font-size: 20px; color: #7f849c; }
-button.connected { background: #262b3d; border-color: #39435d; }
+.network-icon { font-size: 20px; color: @wp_7f849c; }
+button.connected { background: @wp_262b3d; border-color: @wp_39435d; }
 button.connected .network-icon,
-button.connected .network-detail { color: #83a4e7; }
-button.connected:hover { background: #313a50; }
+button.connected .network-detail { color: @wp_83a4e7; }
+button.connected:hover { background: @wp_313a50; }
 
 entry {
-    background: #181825;
-    color: #cdd6f4;
-    caret-color: #83a4e7;
-    border: 1px solid #313244;
+    background: @wp_181825;
+    color: @wp_cdd6f4;
+    caret-color: @wp_83a4e7;
+    border: 1px solid @wp_313244;
     border-radius: 8px;
     padding: 8px;
 }
 
-entry:focus { border-color: #83a4e7; }
-entry selection { background: #83a4e7; color: #11111b; }
+entry:focus { border-color: @wp_83a4e7; }
+entry selection { background: @wp_83a4e7; color: @wp_11111b; }
 
 switch {
-    background: #45475a;
-    border: 1px solid #585b70;
+    background: @wp_45475a;
+    border: 1px solid @wp_585b70;
     border-radius: 16px;
     min-width: 42px;
     min-height: 22px;
 }
 
-switch:checked { background: #89b4fa; border-color: #89b4fa; }
+switch:checked { background: @wp_89b4fa; border-color: @wp_89b4fa; }
 switch slider {
-    background: #cdd6f4;
+    background: @wp_cdd6f4;
     border-radius: 50%;
     min-width: 18px;
     min-height: 18px;
     margin: 2px;
 }
-switch:checked slider { background: #1e1e2e; }
+switch:checked slider { background: @wp_1e1e2e; }
 scrolledwindow, viewport { background: transparent; }
 scrollbar.vertical,
 scrollbar.vertical contents,
@@ -85,7 +87,7 @@ scrollbar.vertical trough {
 }
 
 scrollbar.vertical slider {
-    background: #45475a;
+    background: @wp_45475a;
     background-image: none;
     border: none;
     border-radius: 4px;
@@ -95,7 +97,7 @@ scrollbar.vertical slider {
     margin: 0;
 }
 
-scrollbar.vertical slider:hover { background: #6c7086; }
+scrollbar.vertical slider:hover { background: @wp_6c7086; }
 scrollbar.vertical button {
     background: transparent;
     border: none;

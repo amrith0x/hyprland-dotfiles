@@ -1,6 +1,8 @@
+@import "wallpaper-colors.css";
+
 #wallpaper-selector {
     background: transparent;
-    color: #edf2f7;
+    color: @wp_edf2f7;
     font-family: "JetBrainsMono Nerd Font";
 }
 #wallpaper-selector .card {

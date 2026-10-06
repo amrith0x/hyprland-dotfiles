@@ -67,6 +67,37 @@ dependencies. Run directly with:
 python3 ~/.config/hypr/scripts/wallpaper-selector.py
 ```
 
+## Wallpaper colors and lock screen
+
+Wallpaper colors update automatically when you select an image. New images added
+to `assets/wallpapers` appear the next time the selector opens. The lock screen
+uses the selected wallpaper too; animated wallpapers use a still first frame.
+
+The installer generates the palette files before linking the configs. To refresh
+the palette manually:
+
+```bash
+python3 ~/.config/hypr/scripts/wallpaper-theme.py enable
+```
+
+This recolors Hyprland borders, Waybar, Wi-Fi/Bluetooth panels, Kitty, Tofi,
+Wlogout, and Hyprlock. The palette stays dark; opacity, rounding, layout, and
+warning colors are preserved. Open panels and the lock screen pick up changes
+the next time they open. Application themes such as Dolphin, VS Code, and Neovim
+are not included.
+
+To switch back to the static colors and disable automatic recoloring:
+
+```bash
+python3 ~/.config/hypr/scripts/wallpaper-theme.py revert
+```
+
+The main configs load separate generated `wallpaper-colors.*` files, so changing
+a wallpaper does not rewrite your layout or keybinds. Generated palettes, the
+lock-screen image, and `.theme-runtime/` caches are ignored by Git. No trial
+backups are required. `status` reports whether automatic recoloring is enabled.
+The installer includes Matugen; a local copy is also supported.
+
 ## Bluetooth
 
 Click the Bluetooth icon beside Wi-Fi in Waybar to open the matching device

@@ -13,3 +13,12 @@ Thumbs.db
 # Python bytecode
 __pycache__/
 *.py[cod]
+
+# Wallpaper theme runtime: local generator and palette cache
+.theme-runtime/
+
+# Generated wallpaper palette files and lock-screen image
+**/wallpaper-colors.css
+**/wallpaper-colors.conf
+**/wallpaper-colors.lua
+hypr/.config/hypr/lock-wallpaper.png

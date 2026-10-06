@@ -117,6 +117,13 @@ hl.env("XDG_SESSION_DESKTOP", "Hyprland")
 ---- LOOK AND FEEL ----
 -----------------------
 
+-- Wallpaper accents are generated separately from this configuration.
+local wallpaper_colors = { primary = "89b4fa", tertiary = "cba6f7", border = "45475a", background = "11111b" }
+local palette_ok, palette = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/wallpaper-colors.lua")
+if palette_ok and type(palette) == "table" then
+    wallpaper_colors = palette
+end
+
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 hl.config({
     general = {
@@ -126,8 +133,8 @@ hl.config({
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(89b4faff)", "rgba(cba6f7ff)"}, angle = 45 },
-            inactive_border = "rgba(45475aaa)",
+            active_border   = { colors = {"rgba(" .. wallpaper_colors.primary .. "ff)", "rgba(" .. wallpaper_colors.tertiary .. "ff)"}, angle = 45 },
+            inactive_border = "rgba(" .. wallpaper_colors.border .. "aa)",
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -152,7 +159,7 @@ hl.config({
             enabled      = true,
             range        = 4,
             render_power = 3,
-            color        = 0xee11111b,
+            color        = tonumber("ee" .. wallpaper_colors.background, 16),
         },
 
         blur = {

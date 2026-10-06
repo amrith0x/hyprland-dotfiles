@@ -1,3 +1,5 @@
+@import "wallpaper-colors.css";
+
 * {
     font-family: "JetBrainsMono Nerd Font";
     font-size: 24px;
@@ -6,11 +8,11 @@
 }
 
 window {
-    background-color: #11111b;
+    background-color: @wp_11111b;
 }
 
 button {
-    background-color: #11111b;
+    background-color: @wp_11111b;
     border-style: solid;
     border-radius: 30px;
 
@@ -23,8 +25,8 @@ button {
 }
 
 button:hover {
-    background-color: #cdd6f4;
-    color: #11111b;
+    background-color: @wp_cdd6f4;
+    color: @wp_11111b;
 }
 
 button:focus {
@@ -33,8 +35,8 @@ button:focus {
 }
 
 button:active {
-    background-color: #cdd6f4;
-    color: #11111b;
+    background-color: @wp_cdd6f4;
+    color: @wp_11111b;
     border-radius: 30px;
 }
 

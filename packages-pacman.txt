@@ -23,6 +23,7 @@ hyprpicker
 # KDE / authentication
 kitty
 kvantum
+matugen
 neovim
 networkmanager
 numlockx

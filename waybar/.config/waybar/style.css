@@ -1,3 +1,5 @@
+@import "wallpaper-colors.css";
+
 * {
     border: none;
     border-radius: 0;
@@ -9,34 +11,34 @@
 
 window#waybar {
     background: rgba(21, 18, 27, 0);
-    color: #cdd6f4;
+    color: @wp_cdd6f4;
 }
 
 #workspaces button {
     padding: 5px;
-    color: #555869;
+    color: @wp_555869;
     margin-right: 5px;
 }
 
 #workspaces button.active {
-    color: #a6adc8;
+    color: @wp_a6adc8;
 }
 
 #workspaces button.focused {
-    color: #a6adc8;
-    background: #eba0ac;
+    color: @wp_a6adc8;
+    background: @wp_eba0ac;
     border-radius: 10px;
 }
 
 #workspaces button.urgent {
-    color: #11111b;
+    color: @wp_11111b;
     background: #a6e3a1;
     border-radius: 10px;
 }
 
 #workspaces button:hover {
-    background: #cdd6f4;
-    color: #11111b; 
+    background: @wp_cdd6f4;
+    color: @wp_11111b;
     border-radius: 10px;
 }
 
@@ -51,11 +53,11 @@ window#waybar {
 #workspaces,
 #tray,
 #backlight {
-    background: #1e1e2e;
+    background: @wp_1e1e2e;
     padding: 0px 10px;
     margin: 3px 0px;
     margin-top: 5px;
-    /* border: 1px solid #181825; */
+    /* border: 1px solid @wp_181825; */
 }
 
 #backlight {
@@ -68,7 +70,7 @@ window#waybar {
 }
 
 #workspaces {
-    background: #1e1e2e;
+    background: @wp_1e1e2e;
     border-radius: 10px;
     margin-left: 10px;
     padding-right: 0px;
@@ -84,8 +86,8 @@ window#waybar {
 }
 
 #hardware {
-    background: #1e1e2e;
-    color: #a6adc8;
+    background: @wp_1e1e2e;
+    color: @wp_a6adc8;
     border-radius: 10px;
     margin: 5px 5px 3px 0px;
 }
@@ -100,8 +102,8 @@ window#waybar {
 }
 
 #custom-temperatures {
-    color: #f9e2af;
-    border-left: 1px solid #45475a;
+    color: @wp_f9e2af;
+    border-left: 1px solid @wp_45475a;
 }
 
 #window {
@@ -111,28 +113,28 @@ window#waybar {
 }
 
 #clock {
-    color: #a6adc8;
+    color: @wp_a6adc8;
     border-radius: 10px 10px 10px 10px;
     margin-left: 5px;
     border-right: 0px;
 }
 
 #network {
-    color:  #a6adc8;
+    color:  @wp_a6adc8;
     border-radius: 10px 0px 0px 10px;
 
 }
 
 #bluetooth {
-    color: #a6adc8;
+    color: @wp_a6adc8;
 }
 
 #bluetooth.connected {
-    color: #89b4fa;
+    color: @wp_89b4fa;
 }
 
 #pulseaudio {
-    color: #a6adc8;
+    color: @wp_a6adc8;
     background: transparent;
     margin: 0;
     border-radius: 10px;
@@ -141,7 +143,7 @@ window#waybar {
 }
 
 #volume {
-    background: #1e1e2e;
+    background: @wp_1e1e2e;
     border-radius: 10px;
     margin: 5px 5px 3px 0px;
 }
@@ -157,26 +159,26 @@ window#waybar {
     min-width: 80px;
     min-height: 6px;
     border-radius: 10px;
-    background: #45475a;
+    background: @wp_45475a;
 }
 
 #pulseaudio-slider highlight {
     min-height: 6px;
     border-radius: 10px;
-    background: #a6adc8;
+    background: @wp_a6adc8;
 }
 
 #pulseaudio-slider slider {
     min-width: 12px;
     min-height: 12px;
     border-radius: 50%;
-    background: #cdd6f4;
+    background: @wp_cdd6f4;
     background-image: none;
     box-shadow: none;
 }
 
 #pulseaudio.microphone {
-    color: #a6adc8;
+    color: @wp_a6adc8;
     border-radius: 0px 10px 10px 0px;
     border-left: 0px;
     border-right: 0px;
@@ -184,7 +186,7 @@ window#waybar {
 }
 
 #battery {
-    color:#a6adc8;
+    color:@wp_a6adc8;
     border-radius: 0px 10px 10px 0px;
     margin-right: 10px;
 }

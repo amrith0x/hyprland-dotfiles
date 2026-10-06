@@ -41,6 +41,16 @@ def apply(path, persist=True):
         temporary.write_text(str(path) + '\n')
         temporary.replace(STATE)
 
+    theme_script = Path(__file__).resolve().with_name('wallpaper-theme.py')
+    if theme_script.exists():
+        try:
+            result = subprocess.run([sys.executable, str(theme_script), 'apply', str(path)],
+                                    capture_output=True, text=True, timeout=60)
+            if result.returncode:
+                print(result.stderr.strip(), file=sys.stderr)
+        except (OSError, subprocess.TimeoutExpired) as error:
+            print(f'Wallpaper applied; theme update unavailable: {error}', file=sys.stderr)
+
 
 def restore():
     for attempt in range(20):

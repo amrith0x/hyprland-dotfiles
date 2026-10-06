@@ -171,6 +171,10 @@ done
 # Stow
 # --------------------------------------------------
 
+# Generate included palette files and the lock-screen image before linking configs.
+echo "[+] Preparing wallpaper colors and lock-screen background..."
+python3 "$DOTFILES_DIR/hypr/.config/hypr/scripts/wallpaper-theme.py" apply --no-reload
+
 echo
 echo "[+] Creating symlinks..."
 
