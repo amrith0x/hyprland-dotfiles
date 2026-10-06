@@ -23,6 +23,29 @@ cd ~/dotfiles
 ./install.sh
 ```
 
+The installer enables NetworkManager and Bluetooth immediately and at boot.
+It also installs the Python/GTK dependencies for the wallpaper, Wi-Fi, and
+Bluetooth selectors, plus the Fish prompt and Fastfetch dependencies.
+
+For this laptop's RTX 2060 with the standard Arch `linux` kernel, use:
+
+```bash
+./install.sh --with-nvidia
+```
+
+This adds the packages in `packages-nvidia.txt`. The open NVIDIA driver requires
+a Turing or newer GPU; other kernels or older GPUs need an appropriate driver.
+Reboot after installing the driver, then run `nvidia-smi` to check GPU readings.
+
+## Window appearance and Waybar
+
+Active windows use 90% opacity, inactive windows 70%, with 5px corners and
+Catppuccin blue/mauve borders. Waybar uses a 12-hour clock with AM/PM and shows
+CPU, RAM, and NVIDIA GPU usage; hover expands CPU/GPU temperatures and shows
+the hardware models. Battery hover shows remaining runtime when unplugged,
+Charging when plugged in, or Fully charged. The Bluetooth panel includes a
+power slider. These settings are installed through the existing Stow packages.
+
 ## Wallpaper selector
 
 Press **Super+Shift+W**. A full-screen

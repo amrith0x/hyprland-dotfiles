@@ -45,8 +45,10 @@ class Bluetooth(Wifi):
         header = self.panel.get_children()[0]
         header.get_children()[0].set_text('󰂯  Bluetooth')
         self.refresh.set_tooltip_text('Scan for devices')
-        self.power = Gtk.Button(label='Turn on')
-        self.power.connect('clicked', self.toggle_power)
+        self.power = Gtk.Switch()
+        self.power.set_valign(Gtk.Align.CENTER)
+        self.power.set_tooltip_text('Bluetooth power')
+        self.power.connect('state-set', self.toggle_power)
         header.pack_end(self.power, False, False, 0)
         self.power.show()
         self.password_box.destroy()
@@ -123,7 +125,9 @@ class Bluetooth(Wifi):
         self.adapter, properties = adapters[0]
         self.power.set_sensitive(True)
         self.powered = properties.get('Powered', False)
-        self.power.set_label('Turn off' if self.powered else 'Turn on')
+        self.power.set_state(self.powered)
+        self.power.set_active(self.powered)
+        self.scanning = self.scanning and self.powered
         for child in self.networks.get_children():
             child.destroy()
         devices = [(path, info[DEVICE]) for path, info in objects.items()
@@ -163,11 +167,13 @@ class Bluetooth(Wifi):
                              else 'Bluetooth is off. Turn it on to connect.')
         return True
 
-    def toggle_power(self, *_):
-        if self.adapter:
+    def toggle_power(self, switch, enabled):
+        if self.adapter and enabled != self.powered:
+            self.power.set_sensitive(False)
             self.call(self.adapter, PROPERTIES, 'Set',
-                      GLib.Variant('(ssv)', (ADAPTER, 'Powered', GLib.Variant('b', not self.powered))),
+                      GLib.Variant('(ssv)', (ADAPTER, 'Powered', GLib.Variant('b', enabled))),
                       done=lambda reply, error: self.operation_done(reply, error))
+        return True
 
     def select_device(self, button, path, info):
         self.busy = True

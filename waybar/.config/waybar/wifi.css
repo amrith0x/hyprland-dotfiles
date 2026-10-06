@@ -55,6 +55,24 @@ entry {
 
 entry:focus { border-color: #83a4e7; }
 entry selection { background: #83a4e7; color: #11111b; }
+
+switch {
+    background: #45475a;
+    border: 1px solid #585b70;
+    border-radius: 16px;
+    min-width: 42px;
+    min-height: 22px;
+}
+
+switch:checked { background: #89b4fa; border-color: #89b4fa; }
+switch slider {
+    background: #cdd6f4;
+    border-radius: 50%;
+    min-width: 18px;
+    min-height: 18px;
+    margin: 2px;
+}
+switch:checked slider { background: #1e1e2e; }
 scrolledwindow, viewport { background: transparent; }
 scrollbar.vertical,
 scrollbar.vertical contents,

@@ -7,6 +7,20 @@ BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
 PACMAN_FILE="$DOTFILES_DIR/packages-pacman.txt"
 AUR_FILE="$DOTFILES_DIR/packages-aur.txt"
+NVIDIA_FILE="$DOTFILES_DIR/packages-nvidia.txt"
+INSTALL_NVIDIA=false
+
+for argument in "$@"; do
+    case "$argument" in
+        --with-nvidia) INSTALL_NVIDIA=true ;;
+        -h|--help)
+            echo "Usage: ./install.sh [--with-nvidia]"
+            echo "  --with-nvidia  Install the NVIDIA open driver for Turing/newer GPUs and the stock linux kernel."
+            exit 0
+            ;;
+        *) echo "Unknown option: $argument" >&2; exit 1 ;;
+    esac
+done
 
 STOW_PACKAGES=(
     hypr
@@ -51,6 +65,15 @@ fi
 
 mapfile -t PACMAN_PACKAGES < <(read_packages "$PACMAN_FILE")
 
+if $INSTALL_NVIDIA; then
+    if [[ ! -f "$NVIDIA_FILE" ]]; then
+        echo "[!] Missing packages-nvidia.txt" >&2
+        exit 1
+    fi
+    mapfile -t NVIDIA_PACKAGES < <(read_packages "$NVIDIA_FILE")
+    PACMAN_PACKAGES+=("${NVIDIA_PACKAGES[@]}")
+fi
+
 echo "[+] Installing official Arch packages..."
 
 sudo pacman -S --needed "${PACMAN_PACKAGES[@]}"
@@ -58,6 +81,10 @@ sudo pacman -S --needed "${PACMAN_PACKAGES[@]}"
 echo
 echo "[✓] Official packages installed"
 echo
+
+# The selectors use system services; enable them once for subsequent boots.
+echo "[+] Enabling Wi-Fi and Bluetooth services..."
+sudo systemctl enable --now NetworkManager.service bluetooth.service
 
 # --------------------------------------------------
 # AUR helper
@@ -203,3 +230,7 @@ echo "Linked configs:"
 printf '  - %s\n' "${STOW_PACKAGES[@]}"
 
 echo
+
+if $INSTALL_NVIDIA; then
+    echo "NVIDIA driver installed. Reboot to load it, then verify with nvidia-smi."
+fi

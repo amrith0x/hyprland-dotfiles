@@ -1,0 +1,5 @@
+# Optional: ./install.sh --with-nvidia
+# NVIDIA Turing (RTX 20 series / GTX 16 series) and newer, stock Arch linux kernel.
+linux
+nvidia-open
+nvidia-utils

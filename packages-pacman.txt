@@ -10,6 +10,7 @@ code
 dolphin
 dunst
 fish
+fastfetch
 flatpak
 # Fonts
 git
@@ -24,16 +25,22 @@ kitty
 kvantum
 neovim
 networkmanager
+numlockx
+pciutils
+python
 python-gobject
+gtk3
 gtk-layer-shell
 noto-fonts
 pipewire
+libpulse
 playerctl
 polkit-kde-agent
 qt6ct
 # Shell / editor
 slurp
 stow
+starship
 ttf-jetbrains-mono-nerd
 waybar
 wireplumber
